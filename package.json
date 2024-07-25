@@ -5,7 +5,8 @@
   "description": "Extended Marrow Software Development Kit. Used to create content with Pallets and Crates for Marrow infused games.",
   "unity": "2021.3",
   "dependencies": {
-    "com.stresslevelzero.static-batching": "1.0.1",
+    "com.unity.burst": "1.8.4",
+    "com.unity.collections": "1.2.4",
     "com.unity.addressables": "1.21.12",
     "com.unity.mathematics": "1.2.6",
     "com.unity.nuget.newtonsoft-json": "3.0.2",
