@@ -40,7 +40,7 @@ namespace SLZ.Marrow.Pool
 		
 		public virtual void ValidateComponent()
 		{
-			_poolee = GetComponent<Poolee>();
+			_poolee = GetComponentInParent<Poolee>(true);
 #if UNITY_EDITOR
 			EditorUtility.SetDirty(this);
 #endif
@@ -56,12 +56,15 @@ namespace SLZ.Marrow.Pool
 	    public override void OnInspectorGUI()
 	    {
 			SpawnEvents behaviour = (SpawnEvents)target;
-
-    	    if(GUILayout.Button("Validate"))
-        	{
-				behaviour.ValidateComponent();
-        	}
-	
+			
+			if (!PrefabUtility.IsPartOfPrefabAsset(behaviour.gameObject))
+			{
+    	    	if(GUILayout.Button("Validate"))
+        		{
+					behaviour.ValidateComponent();
+        		}
+			}
+			
         	DrawDefaultInspector();
 	    }
 	}
