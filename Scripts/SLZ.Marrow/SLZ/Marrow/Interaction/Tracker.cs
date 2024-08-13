@@ -86,22 +86,23 @@ namespace SLZ.Marrow.Interaction
 				boxCollider.center = bounds.center;
 				boxCollider.size = bounds.size;
 			}
+			if (boxCollider.size == Vector3.zero)
+			{
+				boxCollider.size = new Vector3(0.05f,0.05f,0.05f);
+			}
 #endif
+		}
+
+		public void ValidateLayer()
+		{
+			if (gameObject.layer < 26)
+			{
+				gameObject.layer = 26;
+			}
 		}
 
 		public void ValidateComponent()
 		{
-
-			//Layer Check
-			int layercheck = LayerMask.NameToLayer("EntityTracker");
-			if(layercheck == -1)
-			{
-				gameObject.layer = 26;
-			}
-			else
-			{
-				gameObject.layer = layercheck;
-			}
 
 			//box collider self check
 			if(_collider == null)
@@ -110,7 +111,7 @@ namespace SLZ.Marrow.Interaction
 			}
 
 			//check if is contained in marrowbody
-			_body = gameObject.GetComponentInParent<MarrowBody>();
+			_body = gameObject.GetComponentInParent<MarrowBody>(true);
 			if(_body != null)
 			{
 				gameObject.name = $"Tracker[{_body.gameObject.name}]";
@@ -118,14 +119,17 @@ namespace SLZ.Marrow.Interaction
 			}
 			else
 			{
-				UnityEngine.Object.Destroy(this);
-				UnityEngine.Object.Destroy(this.gameObject);
+				UnityEngine.Object.DestroyImmediate(this);
+				UnityEngine.Object.DestroyImmediate(this.gameObject);
 				return;
 			}
 
 			//MarrowEntity Check
-			_entity = gameObject.GetComponentInParent<MarrowEntity>();
+			_entity = gameObject.GetComponentInParent<MarrowEntity>(true);
 			
+
+			//Layer Check
+			ValidateLayer();
 #if UNITY_EDITOR
 			EditorUtility.SetDirty(this);
 #endif
@@ -141,10 +145,13 @@ namespace SLZ.Marrow.Interaction
 	    {
 			Tracker behaviour = (Tracker)target;
 
-    	    if(GUILayout.Button("Validate"))
-        	{
-				behaviour.ValidateComponent();
-        	}
+			if (!PrefabUtility.IsPartOfPrefabAsset(behaviour.gameObject))
+			{
+    		    if(GUILayout.Button("Validate"))
+        		{
+					behaviour.ValidateComponent();
+        		}
+			}
 	
         	DrawDefaultInspector();
 	    }

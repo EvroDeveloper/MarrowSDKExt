@@ -5,6 +5,7 @@ using SLZ.Marrow.Warehouse;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine.UIElements;
 #endif
 
 namespace SLZ.Marrow.Interaction
@@ -35,6 +36,10 @@ namespace SLZ.Marrow.Interaction
         
         [field: SerializeField]
 		public Vector3 CenterOfMass { get; private set; }
+
+		public float Mass => 0f;
+
+		public Vector3 CenterOfMassInWorld => default(Vector3);
 
 		public Collider[] Colliders
 		{
@@ -166,6 +171,10 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
+		private void EnableTrackersForIT(bool isEnabled)
+		{
+		}
+
 		internal void INTEnableColliders(bool isEnabled)
 		{
 		}
@@ -190,9 +199,8 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
-		private float CalculateMass()
+		private void CalculateMass(ref float mass, ref Vector3 wCom)
 		{
-			return 0f;
 		}
 
 		public void Pack(MarrowBody parasite)
@@ -308,8 +316,6 @@ namespace SLZ.Marrow.Interaction
 
 		private Dictionary<Collider, int> _ignoredColliders;
 
-		private bool _hasTensorBeenApplied;
-
 #if UNITY_EDITOR
 		public Bounds GetBounds()
 		{
@@ -334,11 +340,11 @@ namespace SLZ.Marrow.Interaction
             	fakeScene.Cleanup();
 				return bounds;
 			}
-            Collider[] colliders = gameobject.GetComponentsInChildren<Collider>();
+            Collider[] colliders = gameobject.GetComponentsInChildren<Collider>(true);
             bool firstcollider = true;
             foreach (Collider collider in colliders)
             {
-				if(collider.GetComponentInParent<MarrowBody>() == body && collider.GetComponent<Tracker>() == null)
+				if(collider.GetComponentInParent<MarrowBody>(true) == body && collider.GetComponent<Tracker>() == null)
 				{
 					if(!collider.isTrigger)
 					{
@@ -368,6 +374,10 @@ namespace SLZ.Marrow.Interaction
 		{
 #if UNITY_EDITOR
 			Bounds bounds = GetBounds();
+			if (bounds.size == Vector3.zero)
+			{
+				bounds.size = new Vector3(0.025f,0.025f,0.05f);
+			}
 			_bounds = bounds;
 #endif
 		}
@@ -388,16 +398,27 @@ namespace SLZ.Marrow.Interaction
 		public void ValidateComponent()
 		{
 			//InteractableHost check	
-			
-			if (!GetComponent<InteractableHost>())
+			if (GetComponent<InteractableHost>() == null)
 			{
-				gameObject.AddComponent<InteractableHost>();
+				Object[] grips = gameObject.GetComponentsInChildren<Grip>(true);
+				int bodygrip = 0;
+				foreach (Object grip in grips)
+				{
+					if(((Component)grip).gameObject.GetComponentInParent<MarrowBody>(true) == this)
+					{
+						bodygrip++;
+					}
+				}
+				if (bodygrip > 0)
+				{
+					gameObject.AddComponent<InteractableHost>();
+				}
 			}
 
 			//MarrowEntity check
 			if (Entity == null)
 			{
-				MarrowEntity rootEntity = GetComponentInParent<MarrowEntity>();
+				MarrowEntity rootEntity = GetComponentInParent<MarrowEntity>(true);
 				MarrowEntity selfEntity = GetComponent<MarrowEntity>();
 				if (selfEntity != null)
 				{
@@ -429,13 +450,13 @@ namespace SLZ.Marrow.Interaction
 			}
 
 			//colliders, trigger and trackers
-			Collider[] colliders = GetComponentsInChildren<Collider>(false);
+			Collider[] colliders = GetComponentsInChildren<Collider>(true);
 			List<Collider> linkedColliders = new List<Collider>();
 			List<Tracker> linkedTracker = new List<Tracker>();
 			List<Collider> linkedTrigger = new List<Collider>();
 			foreach (Collider collider in colliders)
 			{
-				if (collider.GetComponentInParent<MarrowBody>() == this)
+				if (collider.GetComponentInParent<MarrowBody>(true) == this)
 				{
 					Tracker tracker = collider.gameObject.GetComponent<Tracker>();
 					if (tracker != null && !linkedTracker.Contains(tracker))
@@ -482,22 +503,43 @@ namespace SLZ.Marrow.Interaction
 	[DisallowMultipleComponent]
 	public class MarrowBodyEditor : Editor 
 	{
+    	public override VisualElement CreateInspectorGUI()
+    	{
+    	    var root = new VisualElement();
+			MarrowBody behaviour = (MarrowBody)target;
+			if(!PrefabUtility.IsPartOfPrefabAsset(behaviour.gameObject))
+			{
+				var validatebutton = new Button(() => { behaviour.ValidateComponent(); }) { text = "Validate" };
+				var Trackerbutton = new Button(() => { behaviour.GenerateNewTracker(); }) { text = "Add Tracker" };
+				root.Add(validatebutton);
+				root.Add(Trackerbutton);
+			}
+
+    	    UnityEditor.UIElements.InspectorElement.FillDefaultInspector(root, serializedObject, this);
+    	    return root;
+    	}
+
+/*
 	    public override void OnInspectorGUI()
 	    {
 			MarrowBody behaviour = (MarrowBody)target;
 
-    	    if(GUILayout.Button("Validate"))
-        	{
-				behaviour.ValidateComponent();
-        	}
+			if (!PrefabUtility.IsPartOfPrefabAsset(behaviour.gameObject))
+			{
+    	    	if(GUILayout.Button("Validate"))
+        		{
+					behaviour.ValidateComponent();
+        		}
 
-    	    if(GUILayout.Button("Add Tracker"))
-        	{
-				behaviour.GenerateNewTracker();
-        	}
+    	    	if(GUILayout.Button("Add Tracker"))
+        		{
+					behaviour.GenerateNewTracker();
+        		}
+			}
 	
         	DrawDefaultInspector();
 	    }
+		*/
 	}
 #endif
 }

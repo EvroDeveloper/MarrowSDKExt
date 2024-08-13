@@ -8,6 +8,7 @@ using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine.UIElements;
 #endif
 
 namespace SLZ.Marrow.Interaction
@@ -269,6 +270,14 @@ namespace SLZ.Marrow.Interaction
 			}
 		}
 
+		public Poolee Poolee
+		{
+			get
+			{
+				return _poolee;
+			}
+		}
+
 		private void Physics_Awake()
 		{
 		}
@@ -361,6 +370,11 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
+		public Vector3 GetCenterOfMassInWorld()
+		{
+			return default(Vector3);
+		}
+		
 		public void ResetMass()
 		{
 		}
@@ -521,11 +535,16 @@ namespace SLZ.Marrow.Interaction
 
 			//bodies
 			MarrowBody[] marrowBodies = GetComponentsInChildren<MarrowBody>(true);
+			List<MarrowBody> validMarrowBodies = new List<MarrowBody>();
 			foreach(MarrowBody marrowBody in marrowBodies)	
 			{
 				marrowBody.ValidateComponent();
+				if(marrowBody.Entity == this)
+				{
+					validMarrowBodies.Add(marrowBody);
+				}
 			}
-			_bodies = marrowBodies.ToArray();
+			_bodies = validMarrowBodies.ToArray();
 
 			//anchor body
 			if(_bodies.Length > 0)
@@ -541,7 +560,7 @@ namespace SLZ.Marrow.Interaction
 				marrowJoint.ValidateComponent();
 				if(marrowJoint != null)
 				{
-					MarrowEntity parentEntity = marrowJoint.GetComponentInParent<MarrowEntity>();
+					MarrowEntity parentEntity = marrowJoint.GetComponentInParent<MarrowEntity>(true);
 					if (this == parentEntity)
 					{
 						marrowJoint.SetEntity(this);
@@ -556,7 +575,7 @@ namespace SLZ.Marrow.Interaction
 			List<MarrowBehaviour> linkedbehaviours = new List<MarrowBehaviour>();
 			foreach (MarrowBehaviour behaviour in marrowBehaviours)
 			{
-				MarrowEntity parentEntity = behaviour.GetComponentInParent<MarrowEntity>();
+				MarrowEntity parentEntity = behaviour.GetComponentInParent<MarrowEntity>(true);
 				if (this == parentEntity)
 				{
 					behaviour.marrowEntity = this;
@@ -567,14 +586,14 @@ namespace SLZ.Marrow.Interaction
 
 			//poolee
 			Poolee poolee = GetComponent<Poolee>();
-			if(poolee == null)
-			{
-				poolee = gameObject.AddComponent<Poolee>();
-			}
+			//if(poolee == null)
+			//{
+			//	poolee = gameObject.AddComponent<Poolee>();
+			//}
 			_poolee = poolee;
 
 			//spawn event components
-			SpawnEvents[] spawnEvents = GetComponentsInChildren<SpawnEvents>();
+			SpawnEvents[] spawnEvents = GetComponentsInChildren<SpawnEvents>(true);
 			foreach(SpawnEvents spawnEvent in spawnEvents)
 			{
 				spawnEvent.ValidateComponent();
@@ -588,18 +607,47 @@ namespace SLZ.Marrow.Interaction
 	[DisallowMultipleComponent]
 	public class MarrowEntityEditor : Editor 
 	{
+    	public override VisualElement CreateInspectorGUI()
+    	{
+    	    var root = new VisualElement();
+			GameObject behaviourGO = ((MarrowEntity)target).gameObject;
+			if(behaviourGO != null && !PrefabUtility.IsPartOfPrefabAsset(behaviourGO))
+			{
+				var validatebutton = new Button(() => { PopulateMarrowComponents(behaviourGO); }) { text = "Validate" };
+				root.Add(validatebutton);
+			}
+
+    	    UnityEditor.UIElements.InspectorElement.FillDefaultInspector(root, serializedObject, this);
+    	    return root;
+    	}
+/*
 	    public override void OnInspectorGUI()
 	    {
-			MarrowEntity behaviour = (MarrowEntity)target;
+			GameObject behaviourGO = ((MarrowEntity)target).gameObject;
 
-    	    if(GUILayout.Button("Validate"))
-        	{
-				PopulateMarrowComponents(behaviour.gameObject);
+			if(behaviourGO != null && !PrefabUtility.IsPartOfPrefabAsset(behaviourGO))
+			{
+				if(((MarrowEntity)target).Poolee == null)
+				{
+					EditorGUILayout.HelpBox("Poolee not defined!", MessageType.Warning);
+					if(GUILayout.Button("Add Poolee"))
+					{
+						if(behaviourGO.GetComponent<Poolee>() == null)
+						{
+							behaviourGO.AddComponent<Poolee>();
+						}
+						PopulateMarrowComponents(behaviourGO);
+					}
+				}
+    	    	if(GUILayout.Button("Validate"))
+        		{
+					PopulateMarrowComponents(behaviourGO);
+				}
 			}
 	
         	DrawDefaultInspector();
 	    }
-
+*/
 		[MenuItem("GameObject/[Experimental] Delete Marrow Components", false, 0)]
     	public static void DeleteMarrowComponents(MenuCommand menuCommand) {
     	    var selected = Selection.gameObjects[0];
@@ -656,9 +704,14 @@ namespace SLZ.Marrow.Interaction
 
 		[MenuItem("GameObject/[Experimental] Populate Marrow Components", false, 0)]
     	public static void PopulateMarrowComponent_button(MenuCommand menuCommand) {
-			if( EditorUtility.DisplayDialog("Confirmation Dialog", "This will populate necessary components for the entities. Make sure you backup this object", "Yes", "No") )
+			GameObject target = Selection.activeGameObject;
+			if(target != null && EditorUtility.DisplayDialog("Confirmation Dialog", "This will populate necessary components for the entities. Make sure you backup this object", "Yes", "No") )
 			{
-				PopulateMarrowComponents(Selection.activeGameObject);
+				if( target.GetComponent<Poolee>() == null )
+				{
+					target.AddComponent<Poolee>();
+				}
+				PopulateMarrowComponents(target);
 			}
 		}
 

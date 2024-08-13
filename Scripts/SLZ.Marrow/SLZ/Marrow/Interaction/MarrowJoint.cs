@@ -26,6 +26,7 @@ namespace SLZ.Marrow.Interaction
 		private MarrowEntity _entity;
 
 		[SerializeField]
+		[ReadOnly(false)]
 		private ConfigurableJointInfo _defaultConfigJointInfo;
 
 		private SimpleTransform _jointSpace;
@@ -39,6 +40,8 @@ namespace SLZ.Marrow.Interaction
 		private DisabledJointInfo _disableJointInfo;
 
 		private List<Action<MarrowJoint>> _jointBreakActions;
+
+		private List<Action<MarrowJoint>> _jointDestroyActions;
 
 		public MarrowBody BodyA => _bodyA;
 
@@ -242,6 +245,14 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
+		public void RegisterOnDestroyEvent(Action<MarrowJoint> jointDestroyAction)
+		{
+		}
+
+		public void UnregisterOnDestroyEvent(Action<MarrowJoint> jointDestroyAction)
+		{
+		}
+
 		public void SetXDrive(float springMult, float damperMult, float maxForceMult)
 		{
 		}
@@ -363,10 +374,13 @@ namespace SLZ.Marrow.Interaction
 	    {
 			MarrowJoint behaviour = (MarrowJoint)target;
 
-    	    if(GUILayout.Button("Validate"))
-        	{
-				behaviour.ValidateComponent();
-        	}
+			if (!PrefabUtility.IsPartOfPrefabAsset(behaviour.gameObject))
+			{
+    	    	if(GUILayout.Button("Validate"))
+        		{
+					behaviour.ValidateComponent();
+        		}
+			}
 	
         	DrawDefaultInspector();
 	    }
