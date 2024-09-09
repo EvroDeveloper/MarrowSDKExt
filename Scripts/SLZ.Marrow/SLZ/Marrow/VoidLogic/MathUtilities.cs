@@ -1,19 +1,17 @@
-using System.Runtime.CompilerServices;
+﻿using System;
 
 namespace SLZ.Marrow.VoidLogic
 {
 	internal static class MathUtilities
 	{
-		[MethodImpl(256)]
 		public static bool IsApproximatelyEqualToOrGreaterThan(this float num1, float num2)
 		{
-			return false;
+			return default(bool);
 		}
 
-		[MethodImpl(256)]
 		public static bool IsApproximatelyEqualToOrLessThan(this float num1, float num2)
 		{
-			return false;
+			return default(bool);
 		}
 	}
 }

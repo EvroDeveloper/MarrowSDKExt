@@ -1,77 +1,28 @@
-using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System;
 using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.CompilerServices;
 using SLZ.Marrow.Data;
 using UnityEngine;
 
 namespace SLZ.Marrow
 {
+	[Obsolete("Deprecated. Use the new plug and socket system instead.")]
 	public class AmmoSocket : Socket
 	{
-		[StructLayout(3)]
-		[CompilerGenerated]
-		private struct _003CForceLoadAsync_003Ed__24 : IAsyncStateMachine
+		public override bool IsClearOnInsert
 		{
-			public int _003C_003E1__state;
-
-			public AsyncUniTaskMethodBuilder _003C_003Et__builder;
-
-			public MagazineData magazineData;
-
-			public AmmoSocket _003C_003E4__this;
-
-			private Magazine _003Cmagazine_003E5__2;
-
-			private UniTask<SLZ.Marrow.Pool.Poolee>.Awaiter _003C_003Eu__1;
-
-			private UniTask.Awaiter _003C_003Eu__2;
-
-			private void MoveNext()
+			get
 			{
+				return default(bool);
 			}
+		}
 
-            void IAsyncStateMachine.MoveNext()
-            {
-                throw new NotImplementedException();
-            }
-
-            [DebuggerHidden]
-			private void SetStateMachine(IAsyncStateMachine stateMachine)
+		public bool HasMagazine
+		{
+			get
 			{
+				return default(bool);
 			}
-
-            void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-		[Header("Magazine Socket")]
-		public string platform;
-
-		[Header("References")]
-		public Grip primaryGrip;
-
-		public Gun gun;
-
-		public bool despawnOnInsert;
-
-		private bool _isHostGrabbed;
-
-		private bool _isMagazineInserted;
-
-		private bool _isProxyGripState;
-
-		private AmmoPlug _magazinePlug;
-
-		public Action<Hand, Gun> onUpdateProxyGripState;
-
-		public override bool IsClearOnInsert => false;
-
-		public bool HasMagazine => false;
+		}
 
 		protected override void Awake()
 		{
@@ -118,7 +69,6 @@ namespace SLZ.Marrow
 		{
 		}
 
-		[AsyncStateMachine(typeof(_003CForceLoadAsync_003Ed__24))]
 		public UniTask ForceLoadAsync(MagazineData magazineData)
 		{
 			return default(UniTask);
@@ -127,5 +77,29 @@ namespace SLZ.Marrow
 		public override void OnDespawn()
 		{
 		}
+
+		public AmmoSocket()
+		{
+		}
+
+		[Header("Magazine Socket")]
+		public string platform;
+
+		[Header("References")]
+		public Grip primaryGrip;
+
+		public Gun gun;
+
+		public bool despawnOnInsert;
+
+		private bool _isHostGrabbed;
+
+		private bool _isMagazineInserted;
+
+		private bool _isProxyGripState;
+
+		private AmmoPlug _magazinePlug;
+
+		public Action<Gun> onUpdateProxyGripState;
 	}
 }

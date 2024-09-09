@@ -1,3 +1,4 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using SLZ.Marrow.Interaction;
@@ -9,19 +10,6 @@ namespace SLZ.Marrow.Zones
 	[MarrowPlugin("SLZ.Marrow.NewZones", "Zone Manager Plugin", null)]
 	internal class ZoneManagerPlugin : IMarrowPluginLevelCallbacks, IMarrowPlugin
 	{
-		public static ZoneManager ZoneManager
-		{
-			[CompilerGenerated]
-			get
-			{
-				return null;
-			}
-			[CompilerGenerated]
-			private set
-			{
-			}
-		}
-
 		public static ZoneLinkManager<MarrowEntity, ZoneLink> ZoneLinkManager
 		{
 			[CompilerGenerated]
@@ -61,9 +49,13 @@ namespace SLZ.Marrow.Zones
 			}
 		}
 
-		private UniTask SLZ_002EMarrow_002EPlugins_002EIMarrowPluginLevelCallbacks_002EOnBeforeLevelLoad(LevelCrateReference level)
+		UniTask IMarrowPluginLevelCallbacks.OnBeforeLevelLoad(LevelCrateReference level)
 		{
 			return default(UniTask);
+		}
+
+		public ZoneManagerPlugin()
+		{
 		}
 	}
 }

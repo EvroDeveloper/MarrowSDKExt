@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
@@ -8,9 +9,24 @@ namespace SLZ.Marrow.Warehouse
     [Serializable]
     public class Barcode : IEquatable<Barcode>, ISerializationCallbackReceiver
     {
+        public static bool useShortCode = false;
+        public static bool useCachedHashCode = false;
         [SerializeField]
         private string _id = EMPTY;
-        public string ID { get => _id; private set => _id = value; }
+        public string ID
+        {
+            get => _id;
+            private set
+            {
+                _id = value;
+                if (useShortCode)
+                {
+                    shortCodeGenerated = false;
+                    GenerateShortCode();
+                    cachedHashCode = -1;
+                }
+            }
+        }
 
         private bool shortCodeGenerated = false;
         private uint _shortCode = 0;
@@ -29,6 +45,10 @@ namespace SLZ.Marrow.Warehouse
         public static readonly string EMPTY = BuildBarcode("null", "empty", "barcode");
         private static readonly string EMPTY_OLD = "00000000-0000-0000-0000-000000000000";
         public static readonly int MAX_SIZE = 120;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        static readonly Unity.Profiling.ProfilerMarker getHashcodeProfileMarker = new Unity.Profiling.ProfilerMarker("Barcode.GetHashCode");
+#endif
+        private int cachedHashCode = -1;
         public static Barcode EmptyBarcode()
         {
             return new Barcode(EMPTY);
@@ -144,10 +164,21 @@ namespace SLZ.Marrow.Warehouse
             }
         }
 
+        private static Dictionary<string, uint> shortCodeDictionary = new Dictionary<string, uint>();
         private void GenerateShortCode()
         {
             if (!shortCodeGenerated)
             {
+                if (shortCodeDictionary.TryGetValue(ID, out uint cachedShortCode))
+                {
+                    _shortCode = cachedShortCode;
+                }
+                else
+                {
+                    _shortCode = shortCodeDictionary[ID] = (uint)shortCodeDictionary.Count;
+                }
+
+                shortCodeGenerated = true;
             }
         }
 
@@ -182,7 +213,10 @@ namespace SLZ.Marrow.Warehouse
                 return false;
             }
 
-            return this.ID.Equals(other.ID);
+            if (useShortCode)
+                return this.ShortCode.Equals(other.ShortCode);
+            else
+                return this.ID.Equals(other.ID);
         }
 
         public static bool operator ==(Barcode barcode, Barcode otherBarcode)
@@ -207,7 +241,36 @@ namespace SLZ.Marrow.Warehouse
 
         public override int GetHashCode()
         {
-            return (ID).GetHashCode();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            getHashcodeProfileMarker.Begin();
+#endif
+            int hashCode;
+            if (useCachedHashCode)
+            {
+                if (cachedHashCode == -1)
+                {
+                    if (useShortCode)
+                        cachedHashCode = hashCode = ShortCode.GetHashCode();
+                    else
+                        cachedHashCode = hashCode = ID.GetHashCode();
+                }
+                else
+                {
+                    hashCode = cachedHashCode;
+                }
+            }
+            else
+            {
+                if (useShortCode)
+                    hashCode = ShortCode.GetHashCode();
+                else
+                    hashCode = ID.GetHashCode();
+            }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            getHashcodeProfileMarker.End();
+#endif
+            return hashCode;
         }
 
         public void OnBeforeSerialize()
@@ -221,6 +284,14 @@ namespace SLZ.Marrow.Warehouse
             {
                 this.ID = EMPTY;
             }
+
+            if (useShortCode)
+            {
+                shortCodeGenerated = false;
+                GenerateShortCode();
+            }
+
+            cachedHashCode = -1;
 #endif
         }
 

@@ -45,12 +45,12 @@ namespace SLZ.MarrowEditor
             window.Show();
         }
 
-        public static void ShowWindow(Type dataCardType, Pallet pallet, Action<DataCard> onCreate = null)
+        public static void ShowWindow(Type dataCardType, Pallet pallet, Action<DataCard> onCreate = null, string initialTitle = "")
         {
             if (typeof(DataCard).IsAssignableFrom(dataCardType))
             {
                 var window = GetWindow<DataCardCreatorEditor>("Create DataCard");
-                window.Initialize(dataCardType, pallet);
+                window.Initialize(dataCardType, pallet, initialTitle: initialTitle);
                 if (onCreate != null)
                     window.OnCreate += onCreate;
                 window.Show();
@@ -58,13 +58,14 @@ namespace SLZ.MarrowEditor
         }
 
         public Action<DataCard> OnCreate;
-        public void Initialize(Type dataCardTypeInput = null, Pallet pallet = null)
+        public void Initialize(Type dataCardTypeInput = null, Pallet pallet = null, string initialTitle = "")
         {
             dataCardType = dataCardTypeInput;
             if (dataCardType == null)
                 dataCardType = typeof(MonoDisc);
             titleContent = new GUIContent($"Create {dataCardType.Name}", AssetWarehouseTreeView.GetIconForMonoScript(dataCardType));
             dataCard = ScriptableObject.CreateInstance(dataCardType) as DataCard;
+            dataCard.Title = initialTitle;
             if (pallet != null)
                 dataCard.Pallet = pallet;
             if (dataCard.Pallet == null)
@@ -72,7 +73,7 @@ namespace SLZ.MarrowEditor
                 var guids = AssetDatabase.FindAssets("t:Pallet", new[] { MarrowSDK.GetMarrowAssetsPath(PalletWizard.palletFolderName) });
                 if (guids.Length > 0)
                 {
-                    pallet = dataCard.Pallet = AssetDatabase.LoadAssetAtPath<Pallet>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    dataCard.Pallet = AssetDatabase.LoadAssetAtPath<Pallet>(AssetDatabase.GUIDToAssetPath(guids[0]));
                 }
             }
 
@@ -146,7 +147,8 @@ namespace SLZ.MarrowEditor
             AssetDatabase.SaveAssetIfDirty(dataCard);
             AssetDatabase.SaveAssetIfDirty(dataCard.Pallet);
             AssetDatabase.Refresh();
-            AssetWarehouseWindow.ReloadWarehouse().Forget();
+            if (!EditorApplication.isPlaying)
+                AssetWarehouseWindow.ReloadWarehouse().Forget();
             created = true;
             OnCreate?.Invoke(dataCard);
             Close();

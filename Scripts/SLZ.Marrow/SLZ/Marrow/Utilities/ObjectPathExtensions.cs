@@ -14,25 +14,19 @@ namespace SLZ.Marrow.Utilities
 		[PublicAPI]
 		public static string ObjectPath(this Transform tf)
 		{
-			return tf.gameObject.ObjectPath();
+			return null;
 		}
 
 		[PublicAPI]
 		public static string ObjectPath(this Component c)
 		{
-			return c.gameObject.ObjectPath();
+			return null;
 		}
 
 		[PublicAPI]
 		public static string ObjectPath(this GameObject go)
 		{
-			string path = go.name;
-			while (go.transform.parent != null)
-			{
-				go = go.transform.parent.gameObject;
-				path = "/" + go.name + path;
-			}
-			return path;
+			return null;
 		}
 	}
 }

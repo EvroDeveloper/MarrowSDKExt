@@ -89,16 +89,21 @@ namespace SLZ.Marrow.Warehouse
             }
         }
 
-        protected virtual void GenerateColliderBounds()
+        protected void GenerateColliderBounds()
         {
-            if (MainGameObject.EditorAsset != null)
+            this.ColliderBounds = GenerateColliderBounds(MainGameObject.EditorAsset);
+        }
+
+        public static Bounds GenerateColliderBounds(GameObject targetGameObject)
+        {
+            Bounds bounds = new Bounds();
+            if (targetGameObject != null)
             {
                 PreviewRenderUtility fakeScene = new PreviewRenderUtility();
                 var parentGO = new GameObject("root");
                 fakeScene.AddSingleGO(parentGO);
-                var go = Object.Instantiate(MainGameObject.EditorAsset, Vector3.zero, Quaternion.identity, parentGO.transform);
+                var go = Object.Instantiate(targetGameObject, Vector3.zero, Quaternion.identity, parentGO.transform);
                 Collider[] cols = go.GetComponentsInChildren<Collider>();
-                var bounds = new Bounds();
                 bool isFirst = true;
                 for (int j = 0; j < cols.Length; j++)
                 {
@@ -111,12 +116,13 @@ namespace SLZ.Marrow.Warehouse
                     isFirst = false;
                 }
 
-                bounds.center = bounds.center - go.transform.position;
-                this.ColliderBounds = bounds;
+                bounds.center -= go.transform.position;
                 DestroyImmediate(go);
                 DestroyImmediate(parentGO);
                 fakeScene.Cleanup();
             }
+
+            return bounds;
         }
 
         protected virtual void GeneratePreviewMesh()

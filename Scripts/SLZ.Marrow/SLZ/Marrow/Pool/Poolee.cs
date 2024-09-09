@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using SLZ.Marrow.Utilities;
@@ -10,19 +10,13 @@ namespace SLZ.Marrow.Pool
 	[DefaultExecutionOrder(1000)]
 	public class Poolee : MonoBehaviour
 	{
-		private static ComponentCache<Poolee> _cache;
-
-		private bool _isInPool;
-
-		private readonly List<IPoolable> _poolables;
-
-		public Action<GameObject> OnSpawnDelegate;
-
-		public Action<GameObject> OnDespawnDelegate;
-
-		private bool _hasBeenInitialized;
-
-		public static ComponentCache<Poolee> Cache => null;
+		public static ComponentCache<Poolee> Cache
+		{
+			get
+			{
+				return null;
+			}
+		}
 
 		public SpawnableCrate SpawnableCrate
 		{
@@ -42,7 +36,7 @@ namespace SLZ.Marrow.Pool
 			[CompilerGenerated]
 			get
 			{
-				return 0uL;
+				return 0UL;
 			}
 			[CompilerGenerated]
 			internal set
@@ -50,7 +44,13 @@ namespace SLZ.Marrow.Pool
 			}
 		}
 
-		public bool IsInPool => false;
+		public bool IsInPool
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
 
 		private void Awake()
 		{
@@ -80,6 +80,10 @@ namespace SLZ.Marrow.Pool
 		{
 		}
 
+		internal void OnRecycleEvent()
+		{
+		}
+
 		internal void OnDeinitialize()
 		{
 		}
@@ -95,5 +99,23 @@ namespace SLZ.Marrow.Pool
 		public void DeregisterPoolable(IPoolable poolable)
 		{
 		}
+
+		public Poolee()
+		{
+		}
+
+		private static ComponentCache<Poolee> _cache;
+
+		private bool _isInPool;
+
+		private readonly List<IPoolable> _poolables;
+
+		public Action<GameObject> OnSpawnDelegate;
+
+		public Action<GameObject> OnDespawnDelegate;
+
+		public Action<GameObject> OnRecycleDelegate;
+
+		private bool _hasBeenInitialized;
 	}
 }

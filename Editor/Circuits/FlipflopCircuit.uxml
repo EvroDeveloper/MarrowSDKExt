@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.stresslevelzero.marrow.sdk/Editor/Assets/EditorStyleSheets/MarrowStyles.uss?fileID=7433441132597879392&amp;guid=7ebe2475af85eae4ca7aeb90fab90275&amp;type=3#MarrowStyles" />
+    <ui:VisualElement name="rootContainer">
+        <ui:Foldout text="Usage Info" name="usageInfo" value="false">
+            <ui:Label display-tooltip-when-elided="true" text="The Flipflop Node uses a Set Input and a Reset Input to toggle between an output of 0 or 1.  When the Set Input reaches the Set Threshold, the Flipflop Node&apos;s outputs a value of 1.  When the Reset Input reaches the Reset Threshold, the Flipflop Circuit outputs a value of 0.&lt;br&gt;&lt;br&gt;This allows two inputs to toggle a target circuit, where the Set Input acts as an On switch and the Reset Input acts as an Off switch." name="flipflopCircuitInfo" style="white-space: normal; font-size: 12px;" />
+            <ui:Button text="MarrowSDK Documentation - Flipflop Node" display-tooltip-when-elided="true" name="marrowDocsButton" binding-path="marrowDocsButton" tooltip="Open the MarrowSDK Documentation in the default web browser." style="margin-top: 10px; width: auto; align-items: auto; justify-content: flex-start;" />
+        </ui:Foldout>
+        <ui:VisualElement name="validationFeedback" style="visibility: visible; display: flex; margin-bottom: 0;">
+            <ui:IMGUIContainer name="imguiValidationContainer" style="margin-bottom: 10px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="fieldsContainer" />
+        <ui:VisualElement name="imguiInspectorContainer" style="display: flex;">
+            <ui:IMGUIContainer name="imguiInspector" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

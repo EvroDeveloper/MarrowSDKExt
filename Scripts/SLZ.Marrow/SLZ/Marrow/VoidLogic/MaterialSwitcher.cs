@@ -1,20 +1,106 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
-using SLZ.Algorithms.Unity;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/MaterialSwitcher")]
 	[AddComponentMenu("VoidLogic/Sinks/VoidLogic Material Switcher")]
 	[Support(SupportFlags.Supported, null)]
-	public class MaterialSwitcher : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, ISerializationCallbackReceiver, IVoidLogicActuator
+	public sealed class MaterialSwitcher : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, IVoidLogicActuator
 	{
-		[Obsolete("Replace with `_previousConnection`")]
-		[Tooltip("Previous node in the chain")]
-		[Interface(typeof(IVoidLogicSource), false)]
+		public VoidLogicSubgraph Subgraph
+		{
+			[CompilerGenerated]
+			get
+			{
+				return null;
+			}
+			[CompilerGenerated]
+			set
+			{
+			}
+		}
+
+		public bool Deprecated
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
+
+		private void Awake()
+		{
+		}
+
+		private void OnEnable()
+		{
+		}
+
+		private void OnDisable()
+		{
+		}
+
+		private void OnDestroy()
+		{
+		}
+
+		void IVoidLogicNode.Initialize(NodeState nodeState)
+		{
+		}
+
+		void IVoidLogicActuator.Actuate(NodeState nodeState)
+		{
+		}
+
+		private void UpdateMats(Material mat)
+		{
+		}
+
+		public int InputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		public bool TryGetInputConnection(uint inputIndex, [Out] OutputPortReference connectedPort)
+		{
+			return default(bool);
+		}
+
+		public bool TryConnectPortToInput(OutputPortReference output, uint inputIndex)
+		{
+			return default(bool);
+		}
+
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public MaterialSwitcher()
+		{
+		}
+
 		[SerializeField]
-		private MonoBehaviour _previousNode;
+		[HideInInspector]
+		private bool _deprecated;
+
+		[Obsolete("Dead Field: Please remove")]
+		[Tooltip("Dead Field: Please remove")]
+		[NonReorderable]
+		[SerializeField]
+		protected internal MonoBehaviour _previousNode;
+
+		[SerializeField]
+		[Tooltip("Previous node in the chain")]
+		private OutputPortReference _previousConnection;
 
 		private float _priorValue;
 
@@ -39,78 +125,5 @@ namespace SLZ.Marrow.VoidLogic
 		private bool _isHigh;
 
 		private static readonly PortMetadata _portMetadata;
-
-		public VoidLogicSubgraph Subgraph
-		{
-			[CompilerGenerated]
-			get
-			{
-				return null;
-			}
-			[CompilerGenerated]
-			set
-			{
-			}
-		}
-
-		public int InputCount => 0;
-
-		public PortMetadata PortMetadata => default(PortMetadata);
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnBeforeSerialize()
-		{
-		}
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnAfterDeserialize()
-		{
-		}
-
-		private void Awake()
-		{
-		}
-
-		private void OnEnable()
-		{
-		}
-
-		private void OnDisable()
-		{
-		}
-
-		private void OnDestroy()
-		{
-		}
-
-		private void Start()
-		{
-		}
-
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicActuator_002EActuate(ref NodeState nodeState)
-		{
-		}
-
-		private void UpdateMats(Material mat)
-		{
-		}
-
-        public bool TryGetInputAtIndex(uint idx, out IVoidLogicSource input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnBeforeSerialize()
-        {
-            
-        }
-
-        public void OnAfterDeserialize()
-        {
-            
-        }
-
-        public void Actuate(ref NodeState nodeState)
-        {
-            
-        }
-    }
+	}
 }

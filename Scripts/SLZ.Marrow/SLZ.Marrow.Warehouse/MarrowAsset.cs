@@ -83,7 +83,7 @@ namespace SLZ.Marrow.Warehouse
             if (!_operationHandle.IsValid())
             {
                 result = Addressables.LoadAssetAsync<TObject>(AssetGUID);
-                AssetWarehouseMetrics.LoadedCrateAssetsCount.Value++;
+                AssetWarehouseMetrics.LoadedMarrowAssetsCount.Value++;
                 _operationHandle = result;
             }
 
@@ -110,7 +110,7 @@ namespace SLZ.Marrow.Warehouse
             }
 
             Addressables.Release(_operationHandle);
-            AssetWarehouseMetrics.LoadedCrateAssetsCount.Value--;
+            AssetWarehouseMetrics.LoadedMarrowAssetsCount.Value--;
             _operationHandle = default;
             return true;
         }
@@ -135,31 +135,10 @@ namespace SLZ.Marrow.Warehouse
             }
             else
             {
-                var locationsHandle = Addressables.LoadResourceLocationsAsync(AssetGUID);
-                var locations = await locationsHandle;
-                if (locations != null && locations.Count > 0)
-                {
-                    var task = LoadAssetAsyncTask<TObject>().ToUniTask(cancellationToken: cancellationToken);
-                    retObject = await task;
+                var task = LoadAssetAsyncTask<TObject>().ToUniTask(cancellationToken: cancellationToken);
+                retObject = await task;
 #if MARROW_ASSET_REFCOUNT
 #endif
-                    if (retObject != null)
-                    {
-#if UNITY_EDITOR
-                        if (string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath(AssetGUID)))
-                        {
-                            InitialAssetModifications<TObject>(retObject);
-                        }
-#else
-#endif
-                    }
-                }
-                else
-                {
-                    Debug.LogError($"MarrowAsset<{AssetType.ToString()}>: Could not load asset at location: {AssetGUID}");
-                }
-
-                Addressables.Release(locationsHandle);
             }
 
             return retObject;
@@ -460,8 +439,22 @@ namespace SLZ.Marrow.Warehouse
         }
 
 #if UNITY_EDITOR
-        public new UnityEditor.SceneAsset EditorAsset => base.EditorAsset as UnityEditor.SceneAsset;
+        public new SceneAsset EditorAsset => base.EditorAsset as SceneAsset;
         public override Type AssetType => typeof(SceneAsset);
+#endif
+    }
+
+    [Serializable]
+    public class MarrowMonoScript : MarrowAsset
+    {
+        private Type _assetType1;
+        public MarrowMonoScript(string guid) : base(guid)
+        {
+        }
+
+#if UNITY_EDITOR
+        public new MonoScript EditorAsset => base.EditorAsset as MonoScript;
+        public override Type AssetType => typeof(MonoScript);
 #endif
     }
 }

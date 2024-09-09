@@ -67,7 +67,7 @@ namespace SLZ.MarrowEditor.Zones
                 DrawGizmoHelper.DrawText(zoneLinkItem.name, zoneLinkItem.transform.position + itemLabelOffset);
             }
 
-            if (Zone.gizmoZonelabItemMode && MarrowSDKPreferences.gizmoZoneLinkItemRelations)
+            if (ZoneCreateLinkOverlayToolbar.gizmoZonelabItemMode && MarrowSDKPreferences.gizmoZoneLinkItemRelations)
             {
                 ZoneLink zoneLinkItemZone = null;
                 Type type = zoneLinkItem.GetType();

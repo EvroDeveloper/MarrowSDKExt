@@ -131,5 +131,25 @@ namespace SLZ.Marrow.Zones
         {
             throw new NotImplementedException();
         }
+
+        public bool TryGetInputConnection(uint inputIndex, OutputPortReference connectedPort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryConnectPortToInput(OutputPortReference output, uint inputIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Initialize(NodeState nodeState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Calculate(NodeState nodeState)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

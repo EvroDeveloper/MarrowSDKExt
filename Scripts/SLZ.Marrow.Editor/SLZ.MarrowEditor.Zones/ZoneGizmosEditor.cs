@@ -139,7 +139,7 @@ namespace SLZ.MarrowEditor.Zones
         [DrawGizmo(GizmoType.Selected)]
         static void DrawSelectedZoneGizmo(Zone zone, GizmoType gizmoType)
         {
-            if (!Zone.gizmoZonelabMode && MarrowSDKPreferences.gizmoShowZoneGizmos)
+            if (!ZoneCreateLinkOverlayToolbar.gizmoZonelabMode && MarrowSDKPreferences.gizmoShowZoneGizmos)
             {
                 DrawSelectedZone(zone);
             }
@@ -148,7 +148,7 @@ namespace SLZ.MarrowEditor.Zones
         [DrawGizmo(GizmoType.NonSelected)]
         static void DrawNonSelectedZoneGizmo(Zone zone, GizmoType gizmoType)
         {
-            if (!Zone.gizmoZonelabMode && MarrowSDKPreferences.gizmoShowZoneGizmos)
+            if (!ZoneCreateLinkOverlayToolbar.gizmoZonelabMode && MarrowSDKPreferences.gizmoShowZoneGizmos)
             {
                 DrawNonSelectedZone(zone);
             }
@@ -159,7 +159,7 @@ namespace SLZ.MarrowEditor.Zones
         {
             if (MarrowSDKPreferences.gizmoShowZoneGizmos)
             {
-                if (Zone.gizmoZonelabMode || Zone.gizmoZonelabItemMode)
+                if (ZoneCreateLinkOverlayToolbar.gizmoZonelabMode || ZoneCreateLinkOverlayToolbar.gizmoZonelabItemMode)
                 {
                     DrawSelectedZone(zone);
                 }
@@ -173,7 +173,7 @@ namespace SLZ.MarrowEditor.Zones
         {
             if (MarrowSDKPreferences.gizmoShowZoneGizmos)
             {
-                if (Zone.gizmoZonelabMode || Zone.gizmoZonelabItemMode)
+                if (ZoneCreateLinkOverlayToolbar.gizmoZonelabMode || ZoneCreateLinkOverlayToolbar.gizmoZonelabItemMode)
                 {
                     DrawNonSelectedPickableZone(zone);
                 }
@@ -1152,7 +1152,7 @@ namespace SLZ.MarrowEditor.Zones
 
         private void OnSceneGUI()
         {
-            if (Zone.gizmoZoneLinkHandles)
+            if (ZoneCreateLinkOverlayToolbar.gizmoZoneLinkHandles)
             {
                 ShowZoneLinkHandles();
             }
@@ -1167,7 +1167,7 @@ namespace SLZ.MarrowEditor.Zones
                     continue;
                 }
 
-                if (Camera.current != null && Camera.current == SceneView.lastActiveSceneView.camera && Vector3.Dot(zoneLink.transform.position - Camera.current.transform.position, Camera.current.transform.forward) < Zone.gizmoZoneLinkHandlesRange)
+                if (Camera.current != null && Camera.current == SceneView.lastActiveSceneView.camera && Vector3.Dot(zoneLink.transform.position - Camera.current.transform.position, Camera.current.transform.forward) < ZoneCreateLinkOverlayToolbar.gizmoZoneLinkHandlesRange)
                 {
                     BoxCollider boxCollider = null;
                     SphereCollider sphereCollider = null;

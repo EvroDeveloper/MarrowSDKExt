@@ -10,6 +10,7 @@
         "SLZ.Marrow.Unprivated.Editor",
         "SLZ.Marrow.Unprivated.Unsafe",
         "SLZ.Marrow.VoidLogic.Core",
+        "UltEvents",
         "UniTask.Addressables",
         "UniTask.Linq",
         "UniTask",

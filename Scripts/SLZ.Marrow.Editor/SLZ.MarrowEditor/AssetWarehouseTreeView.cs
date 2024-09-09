@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor.IMGUI.Controls;
 using Cysharp.Threading.Tasks;
 using System;
+using SLZ.Marrow;
 using Object = UnityEngine.Object;
 
 namespace SLZ.MarrowEditor
@@ -524,10 +525,17 @@ namespace SLZ.MarrowEditor
             }
         }
 
+        private static Dictionary<Type, Texture2D> scannableIconCache = new Dictionary<Type, Texture2D>();
         private void SetupDataCardType(List<DataCard> dataCards, ref int id, System.Type dataCardType, TreeViewItem dataCardTypeTreeItem, TreeViewItem root)
         {
             bool subListSetup = false;
             Texture2D dataCardIcon = null;
+            if (!scannableIconCache.ContainsKey(typeof(DataCard)))
+            {
+                scannableIconCache[typeof(DataCard)] = AssetDatabase.LoadAssetAtPath<Texture2D>(MarrowSDK.GetPackagePath("Editor/Assets/Icons/Warehouse/datacard.png"));
+            }
+
+            string dataCardScriptsPath = String.Empty;
             var dataCardTypeTreeSubItemAdded = new TreeViewItem
             {
                 id = id,
@@ -538,7 +546,27 @@ namespace SLZ.MarrowEditor
             {
                 if (dataCardIcon == null)
                 {
-                    dataCardIcon = AssetPreview.GetMiniThumbnail(dataCards[i]);
+                    if (!scannableIconCache.TryGetValue(dataCardType, out dataCardIcon))
+                    {
+                        if (string.IsNullOrEmpty(dataCardScriptsPath))
+                        {
+                            DataCard dataCard = ScriptableObject.CreateInstance(dataCardType) as DataCard;
+                            dataCardScriptsPath = AssetDatabase.GetAssetPath(MonoScript.FromScriptableObject(dataCard)).Replace($"{dataCardType.Name}.cs", "");
+                            Object.DestroyImmediate(dataCard);
+                        }
+
+                        var dataCardMonoScript = AssetDatabase.LoadAssetAtPath<MonoScript>($"{dataCardScriptsPath}/{dataCardType.Name}.cs");
+                        if (dataCardMonoScript != null)
+                        {
+                            dataCardIcon = EditorGUIUtility.GetIconForObject(dataCardMonoScript);
+                        }
+                        else
+                        {
+                            dataCardIcon = scannableIconCache[typeof(DataCard)];
+                        }
+
+                        scannableIconCache[dataCardType] = dataCardIcon;
+                    }
                 }
 
                 if (!subListSetup && !list)

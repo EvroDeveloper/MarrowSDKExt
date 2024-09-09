@@ -1,37 +1,14 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
-using SLZ.Algorithms.Unity;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/ToneGenerator")]
-	[AddComponentMenu("VoidLogic/Sinks/VoidLogic Tone Generator")]
 	[Support(SupportFlags.AlphaSupported, "This is intended mainly for debugging, and as such its serialization compatibility is not guaranteed.")]
-	public class ToneGenerator : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, ISerializationCallbackReceiver, IVoidLogicActuator
+	[AddComponentMenu("VoidLogic/Sinks/VoidLogic Tone Generator")]
+	public sealed class ToneGenerator : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, IVoidLogicActuator
 	{
-		[Obsolete("Replace with `_previousConnections`")]
-		[Tooltip("Previous node(s) in the chain")]
-		[SerializeField]
-		[Interface(typeof(IVoidLogicSource), false)]
-		private MonoBehaviour[] _previous;
-		[Range(0f, 1f)]
-		[SerializeField]
-		private float _volume;
-
-		[SerializeField]
-		private AnimationCurve _curve;
-
-		private float _frequency;
-
-		private int _sampleRate;
-
-		private float _phase;
-
-		private bool _running;
-
-		private static readonly PortMetadata _portMetadata;
-
 		public VoidLogicSubgraph Subgraph
 		{
 			[CompilerGenerated]
@@ -45,6 +22,14 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
+		public bool Deprecated
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
+
 		public float Volume
 		{
 			get
@@ -54,18 +39,6 @@ namespace SLZ.Marrow.VoidLogic
 			set
 			{
 			}
-		}
-
-		public int InputCount => 0;
-
-		public PortMetadata PortMetadata => default(PortMetadata);
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnBeforeSerialize()
-		{
-		}
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnAfterDeserialize()
-		{
 		}
 
 		private void Awake()
@@ -88,7 +61,11 @@ namespace SLZ.Marrow.VoidLogic
 		{
 		}
 
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicActuator_002EActuate(ref NodeState nodeState)
+		void IVoidLogicNode.Initialize(NodeState nodeState)
+		{
+		}
+
+		void IVoidLogicActuator.Actuate(NodeState nodeState)
 		{
 		}
 
@@ -96,24 +73,66 @@ namespace SLZ.Marrow.VoidLogic
 		{
 		}
 
-        public bool TryGetInputAtIndex(uint idx, out IVoidLogicSource input)
-        {
-            throw new NotImplementedException();
-        }
+		public int InputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
-        public void OnBeforeSerialize()
-        {
-            
-        }
+		public bool TryGetInputConnection(uint inputIndex, [Out] OutputPortReference connectedPort)
+		{
+			return default(bool);
+		}
 
-        public void OnAfterDeserialize()
-        {
-            
-        }
+		public bool TryConnectPortToInput(OutputPortReference output, uint inputIndex)
+		{
+			return default(bool);
+		}
 
-        public void Actuate(ref NodeState nodeState)
-        {
-            
-        }
-    }
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public ToneGenerator()
+		{
+		}
+
+		[SerializeField]
+		[HideInInspector]
+		private bool _deprecated;
+
+		[Obsolete("Dead Field: Please remove")]
+		[Tooltip("Dead Field: Please remove")]
+		[SerializeField]
+		[NonReorderable]
+		protected internal MonoBehaviour[] _previous;
+
+		[Tooltip("Previous node(s) in the chain")]
+		[NonReorderable]
+		[SerializeField]
+		protected internal OutputPortReference[] _previousConnections;
+
+		[Range(0f, 1f)]
+		[SerializeField]
+		private float _volume;
+
+		[SerializeField]
+		private AnimationCurve _curve;
+
+		private float _frequency;
+
+		private int _sampleRate;
+
+		private float _phase;
+
+		private bool _running;
+
+		private static readonly PortMetadata _portMetadata;
+	}
 }

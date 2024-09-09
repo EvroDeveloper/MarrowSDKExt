@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using SLZ.Marrow.Interaction;
 using UnityEngine;
 
@@ -8,30 +9,13 @@ namespace SLZ.Marrow
 	[Serializable]
 	public class Servo : MonoBehaviour
 	{
-		private enum RotationJointType
+		public ConfigurableJoint joint
 		{
-			None = 0,
-			Revolute = 1,
-			ZeroTwist = 2,
-			Spherical = 3
+			get
+			{
+				return null;
+			}
 		}
-
-		[SerializeField]
-		private ConfigurableJoint _joint;
-
-		private Rigidbody _rb;
-
-		private Quaternion _initialRotation;
-
-		private Quaternion _toJointSpace;
-
-		private Quaternion _toJointSpaceInv;
-
-		private Quaternion _toJointSpaceFromDefault;
-
-		private RotationJointType _rotationJointType;
-
-		public ConfigurableJoint joint => null;
 
 		public MarrowBody marrowBody
 		{
@@ -124,7 +108,29 @@ namespace SLZ.Marrow
 			}
 		}
 
-		public Quaternion initialRotation => default(Quaternion);
+		public Quaternion initialRotation
+		{
+			get
+			{
+				return default(Quaternion);
+			}
+		}
+
+		public Quaternion toJointSpace
+		{
+			get
+			{
+				return default(Quaternion);
+			}
+		}
+
+		public Quaternion toJointSpaceFromCa
+		{
+			get
+			{
+				return default(Quaternion);
+			}
+		}
 
 		private void Start()
 		{
@@ -139,37 +145,51 @@ namespace SLZ.Marrow
 			return default(Vector3);
 		}
 
-		[MethodImpl(256)]
 		public float GetTwistInDegrees()
 		{
 			return 0f;
 		}
 
-		[MethodImpl(256)]
 		public float GetTwistInDegrees(Quaternion rotationToTest)
 		{
 			return 0f;
 		}
 
-		[MethodImpl(256)]
 		public float GetSwingInDegrees()
 		{
 			return 0f;
 		}
 
-		public float GetSwingInDegrees(out Vector2 yPositiveAlignsToSecAxis)
+		public float GetSwingInDegrees(Quaternion rotationToTest)
 		{
-			yPositiveAlignsToSecAxis = default(Vector2);
 			return 0f;
 		}
 
-		public float GetSwingInLimitPercent(out Vector2 yPositiveAlignsToSecAxis)
+		public float GetSwingInDegrees([Out] Vector2 yPositiveAlignsToSecAxis)
 		{
-			yPositiveAlignsToSecAxis = default(Vector2);
 			return 0f;
 		}
 
-		[MethodImpl(256)]
+		public float GetSwingInDegrees(Quaternion rotationToTest, [Out] Vector2 yPositiveAlignsToSecAxis)
+		{
+			return 0f;
+		}
+
+		public float GetSwingInLimitPercent([Out] Vector2 yPositiveAlignsToSecAxis)
+		{
+			return 0f;
+		}
+
+		public float GetSwingInLimitPercent(Quaternion rotationToTest, [Out] Vector2 yPositiveAlignsToSecAxis)
+		{
+			return 0f;
+		}
+
+		public float GetLinearXInMeters()
+		{
+			return 0f;
+		}
+
 		public float GetTwistInLimitPercent()
 		{
 			return 0f;
@@ -266,12 +286,35 @@ namespace SLZ.Marrow
 		{
 		}
 
-		public void SetTargetTwistInDegrees(float targetTwist)
+		public void SetTargetPositionLocal(Vector3 targetLocalPosition, Quaternion targetLocalRotation)
 		{
 		}
 
-		public void SetTargetPositionLocal(Vector3 targetLocalPosition, Quaternion targetLocalRotation)
+		public Servo()
 		{
+		}
+
+		[SerializeField]
+		private ConfigurableJoint _joint;
+
+		private Rigidbody _rb;
+
+		private Quaternion _initialRotation;
+
+		private Quaternion _toJointSpace;
+
+		private Quaternion _toJointSpaceInv;
+
+		private Quaternion _toJointSpaceFromCa;
+
+		private Servo.RotationJointType _rotationJointType;
+
+		private enum RotationJointType
+		{
+			None,
+			Revolute,
+			ZeroTwist,
+			Spherical
 		}
 	}
 }

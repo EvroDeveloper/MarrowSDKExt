@@ -1,3 +1,4 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -5,15 +6,8 @@ namespace SLZ.Marrow.VoidLogic
 {
 	[AddComponentMenu("VoidLogic/Sources/VoidLogic Power")]
 	[Support(SupportFlags.Supported, null)]
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/PowerSource")]
-	public class PowerSource : MonoBehaviour, IVoidLogicSource, IVoidLogicNode
+	public sealed class PowerSource : MonoBehaviour, IVoidLogicSource, IVoidLogicNode
 	{
-		[Tooltip("Amount of power supplied by this source")]
-		[SerializeField]
-		private float _value;
-
-		private static readonly PortMetadata _portMetadata;
-
 		public VoidLogicSubgraph Subgraph
 		{
 			[CompilerGenerated]
@@ -27,7 +21,21 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		public int OutputCount => 0;
+		public bool Deprecated
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
+
+		public int OutputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
 		public float OutputValue
 		{
@@ -39,8 +47,6 @@ namespace SLZ.Marrow.VoidLogic
 			{
 			}
 		}
-
-		public PortMetadata PortMetadata => default(PortMetadata);
 
 		private void Awake()
 		{
@@ -58,13 +64,34 @@ namespace SLZ.Marrow.VoidLogic
 		{
 		}
 
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicSource_002ECalculate(ref NodeState nodeState)
+		void IVoidLogicNode.Initialize(NodeState nodeState)
 		{
 		}
 
-        public void Calculate(ref NodeState nodeState)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+		void IVoidLogicSource.Calculate(NodeState nodeState)
+		{
+		}
+
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public PowerSource()
+		{
+		}
+
+		[SerializeField]
+		[HideInInspector]
+		private bool _deprecated;
+
+		[Tooltip("Amount of power supplied by this source")]
+		[SerializeField]
+		private float _value;
+
+		private static readonly PortMetadata _portMetadata;
+	}
 }

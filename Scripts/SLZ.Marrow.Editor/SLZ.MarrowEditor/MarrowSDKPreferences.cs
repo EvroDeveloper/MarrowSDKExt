@@ -49,6 +49,8 @@ namespace SLZ.MarrowEditor
         public static bool verboseWarehouseLogging = false;
         public static bool unlockEditingScannables = false;
         public static bool packWithDedupe = false;
+#if false
+#endif
         public static bool gizmoShowZoneGizmos = true;
         public static bool gizmoShowZonePickableCube = true;
         public static bool gizmoShowZoneLinks = true;
@@ -153,6 +155,8 @@ namespace SLZ.MarrowEditor
             verboseWarehouseLogging = EditorPrefs.GetBool("VerboseWarehouseLogging", false);
             unlockEditingScannables = EditorPrefs.GetBool("UnlockEditingScannables", false);
             packWithDedupe = EditorPrefs.GetBool("PackWithDedupe", false);
+#if false
+#endif
             gizmoShowZoneGizmos = EditorPrefs.GetBool("gizmoShowZoneGizmos", true);
             gizmoShowZonePickableCube = EditorPrefs.GetBool("gizmoShowZonePickableCube", true);
             gizmoShowZoneLinks = EditorPrefs.GetBool("gizmoShowZoneLinks", true);
@@ -333,6 +337,8 @@ namespace SLZ.MarrowEditor
                 packWithDedupe = EditorGUILayout.Toggle("Pack With Dedupe", packWithDedupe);
             }
 
+#if false
+#endif
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Zones", EditorStyles.boldLabel);
             gizmoShowZoneGizmos = EditorGUILayout.Toggle("Show Zone Gizmos", gizmoShowZoneGizmos);
@@ -372,6 +378,8 @@ namespace SLZ.MarrowEditor
                 EditorPrefs.SetBool("VerboseWarehouseLogging", verboseWarehouseLogging);
                 EditorPrefs.SetBool("UnlockEditingScannables", unlockEditingScannables);
                 EditorPrefs.SetBool("PackWithDedupe", packWithDedupe);
+#if false
+#endif
                 EditorPrefs.SetBool("gizmoShowZoneGizmos", gizmoShowZoneGizmos);
                 EditorPrefs.SetBool("gizmoShowZonePickableCube", gizmoShowZonePickableCube);
                 EditorPrefs.SetBool("gizmoShowZoneLinks", gizmoShowZoneLinks);

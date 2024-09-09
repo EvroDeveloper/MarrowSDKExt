@@ -1,23 +1,13 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Sequencer")]
 	[Support(SupportFlags.AlphaSupported, "This needs to be updated to use sensors and actuators.")]
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/SequencerNode")]
-	public class SequencerNode : BaseNode
+	[AddComponentMenu("VoidLogic/VoidLogic Sequencer")]
+	public sealed class SequencerNode : BaseNode
 	{
-		private bool _isRunning;
-
-		private float _time;
-
-		private float _cachedEndKeyTime;
-
-		private float _cachedValue;
-
-		private static readonly PortMetadata _portMetadata;
-
 		private AnimationCurve Sequence
 		{
 			[CompilerGenerated]
@@ -36,7 +26,7 @@ namespace SLZ.Marrow.VoidLogic
 			[CompilerGenerated]
 			get
 			{
-				return false;
+				return default(bool);
 			}
 			[CompilerGenerated]
 			private set
@@ -62,7 +52,7 @@ namespace SLZ.Marrow.VoidLogic
 			[CompilerGenerated]
 			get
 			{
-				return false;
+				return default(bool);
 			}
 			[CompilerGenerated]
 			private set
@@ -75,7 +65,7 @@ namespace SLZ.Marrow.VoidLogic
 			[CompilerGenerated]
 			get
 			{
-				return false;
+				return default(bool);
 			}
 			[CompilerGenerated]
 			private set
@@ -109,8 +99,6 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
 		private void Start()
 		{
 		}
@@ -119,8 +107,34 @@ namespace SLZ.Marrow.VoidLogic
 		{
 		}
 
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public SequencerNode()
+		{
+		}
+
+		private bool _isRunning;
+
+		private float _time;
+
+		private float _cachedEndKeyTime;
+
+		private float _cachedValue;
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

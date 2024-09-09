@@ -1,20 +1,19 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
+	[AddComponentMenu("VoidLogic/VoidLogic Toggle")]
 	[Support(SupportFlags.Supported, null)]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Toggle")]
-	public class ToggleNode : BaseNode
+	public sealed class ToggleNode : BaseNode
 	{
-		private static readonly PortMetadata _portMetadata;
-
 		public bool Value
 		{
 			[CompilerGenerated]
 			get
 			{
-				return false;
+				return default(bool);
 			}
 			[CompilerGenerated]
 			set
@@ -48,10 +47,26 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public ToggleNode()
+		{
+		}
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

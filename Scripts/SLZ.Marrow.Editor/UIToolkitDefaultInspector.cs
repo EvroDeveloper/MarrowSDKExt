@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[CanEditMultipleObjects]
 [CustomEditor(typeof(UnityEngine.Object), editorForChildClasses: true)]
 public class UIToolkitDefaultInspector : Editor
 {

@@ -16,6 +16,9 @@
             <uie:PropertyField binding-path="_uiEventSystem" name="ui-event-system" />
             <uie:PropertyField binding-path="_defaultAudioMixer" name="audio-mixer" />
             <uie:PropertyField binding-path="_audioPlayer" name="audio-player" />
+            <ui:VisualElement name="defaults-container" style="padding-left: 15px;">
+                <uie:PropertyField binding-path="_defaultLoadingLevel" name="loading-level" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:Label text="DataCards" display-tooltip-when-elided="true" name="datacard-header" style="-unity-font-style: bold; margin-top: 12px;" />
         <ui:VisualElement name="datacards-container" style="padding-left: 15px;">
@@ -27,9 +30,16 @@
             <uie:PropertyField binding-path="_defaultAmbience" name="default-ambience" />
             <uie:PropertyField binding-path="_defaultSurfaceDataCard" name="default-surfacedatacard" />
         </ui:VisualElement>
-        <ui:Label text="Optional Settings" display-tooltip-when-elided="true" name="optional-header" style="-unity-font-style: bold; margin-top: 12px;" />
-        <ui:VisualElement name="optional-container" style="padding-left: 15px;">
-            <uie:PropertyField binding-path="_additionalDefineSymbols" name="additional-define-symbols" />
+        <ui:Label text="VFX Settings" display-tooltip-when-elided="true" name="vfx-header" style="-unity-font-style: bold; margin-top: 12px;" />
+        <ui:VisualElement name="vfx-container" style="padding-left: 15px;">
+            <uie:PropertyField binding-path="_spawnVFX" name="spawnVFX" />
+            <uie:PropertyField binding-path="_despawnVFX" name="despawnVFX" />
         </ui:VisualElement>
+        <ui:Label text="SFX Settings" display-tooltip-when-elided="true" name="sfx-header" style="-unity-font-style: bold; margin-top: 12px;" />
+        <ui:VisualElement name="sfx-container" style="padding-left: 15px;">
+            <uie:PropertyField binding-path="_spawnSFX" name="spawnSFX" />
+            <uie:PropertyField binding-path="_despawnSFX" name="despawnSFX" />
+        </ui:VisualElement>
+        <ui:VisualElement name="optional-container" style="padding-left: 15px;" />
     </ui:VisualElement>
 </ui:UXML>

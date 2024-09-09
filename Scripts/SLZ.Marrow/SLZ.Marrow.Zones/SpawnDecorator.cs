@@ -1,3 +1,4 @@
+using SLZ.Marrow.Utilities;
 using SLZ.Marrow.Warehouse;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace SLZ.Marrow.Zones
     public class SpawnDecorator : MonoBehaviour, ISpawnListenable
     {
         [SerializeField]
+        [ReadOnly]
         protected CrateSpawner _crateSpawner;
 #if UNITY_EDITOR
         protected virtual void Reset()
@@ -14,10 +16,5 @@ namespace SLZ.Marrow.Zones
             _crateSpawner = GetComponent<CrateSpawner>();
         }
 #endif
-
-        public void Capture()
-        {
-            _crateSpawner = GetComponent<CrateSpawner>();
-        }
     }
 }

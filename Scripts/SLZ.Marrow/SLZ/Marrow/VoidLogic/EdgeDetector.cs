@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using JetBrains.Annotations;
 
 namespace SLZ.Marrow.VoidLogic
@@ -7,12 +8,6 @@ namespace SLZ.Marrow.VoidLogic
 	[Serializable]
 	public sealed class EdgeDetector
 	{
-		private bool _inputWasNotLow;
-
-		private bool _inputWasNotHigh;
-
-		private float _nextAvailableTick;
-
 		public float HighThreshold
 		{
 			[CompilerGenerated]
@@ -44,7 +39,7 @@ namespace SLZ.Marrow.VoidLogic
 			[CompilerGenerated]
 			get
 			{
-				return default(TriggerBehavior);
+				return TriggerBehavior.DontTrigger;
 			}
 			[CompilerGenerated]
 			set
@@ -71,25 +66,30 @@ namespace SLZ.Marrow.VoidLogic
 
 		private EdgeType Tick(float nextInput)
 		{
-			return default(EdgeType);
+			return EdgeType.NotAnEdge;
 		}
 
 		private ValueType TestValue(float value)
 		{
-			return default(ValueType);
+			return ValueType.IndeterminateValue;
 		}
 
 		[PublicAPI]
 		public bool TickAndTest(float value)
 		{
-			return false;
+			return default(bool);
 		}
 
 		[PublicAPI]
-		public bool TickAndTest(float value, out EdgeType edgeType)
+		public bool TickAndTest(float value, [Out] EdgeType edgeType)
 		{
-			edgeType = default(EdgeType);
-			return false;
+			return default(bool);
 		}
+
+		private bool _inputWasNotLow;
+
+		private bool _inputWasNotHigh;
+
+		private float _nextAvailableTick;
 	}
 }

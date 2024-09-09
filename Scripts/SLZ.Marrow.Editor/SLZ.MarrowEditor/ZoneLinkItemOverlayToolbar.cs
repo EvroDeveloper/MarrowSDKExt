@@ -127,14 +127,14 @@ namespace SLZ.MarrowEditor
         {
             zonelabItemModeToggle.text = "  Enabled: Zones and ZoneLinkItems Scene-Selectable";
             svm.DisablePicking(nonZoneGameObjects.ToArray(), false);
-            Zone.gizmoZonelabItemMode = true;
+            ZoneCreateLinkOverlayToolbar.gizmoZonelabItemMode = true;
         }
 
         private void DisableZonelabItemMode(SceneVisibilityManager svm, Toggle zonelabItemModeToggle)
         {
             zonelabItemModeToggle.text = "  Disabled: All Objects are Selectable";
             svm.EnableAllPicking();
-            Zone.gizmoZonelabItemMode = false;
+            ZoneCreateLinkOverlayToolbar.gizmoZonelabItemMode = false;
         }
     }
 }
