@@ -1,14 +1,13 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
+	[AddComponentMenu("VoidLogic/VoidLogic Memory")]
 	[Support(SupportFlags.BetaSupported, "Should be stable, but needs more usage for full confidence")]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Memory")]
 	public sealed class MemoryNode : BaseNode
 	{
-		private static readonly PortMetadata _portMetadata;
-
 		public float Value
 		{
 			[CompilerGenerated]
@@ -48,10 +47,26 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public MemoryNode()
+		{
+		}
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

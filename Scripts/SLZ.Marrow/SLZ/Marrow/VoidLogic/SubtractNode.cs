@@ -1,18 +1,32 @@
+﻿using System;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
+	[AddComponentMenu("VoidLogic/VoidLogic Subtract")]
 	[Support(SupportFlags.Supported, null)]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Subtract")]
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/SubtractNode")]
-	public class SubtractNode : BaseNode
+	public sealed class SubtractNode : BaseNode
 	{
-		private static readonly PortMetadata _portMetadata;
-
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public SubtractNode()
+		{
+		}
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

@@ -33,13 +33,15 @@ namespace SLZ.Marrow.Warehouse
         [SerializeField]
         public OnSpawnEvent onSpawnEvent;
 #if UNITY_EDITOR
+        [NonSerialized]
+        public bool showPreviewGizmo = true;
         public static bool showPreviewMesh = true;
         public static bool showColliderBounds = true;
         public static bool showLitMaterialPreview = false;
-        private static Material defaultLitMat = null;
+        public static Material defaultLitMat = null;
         public static float gizmoVisRange = 50f;
 #endif
-        private SpawnableCrateReference GetCrateReference()
+        public SpawnableCrateReference GetCrateReference()
         {
             if (AssetWarehouse.ready)
             {
@@ -81,8 +83,12 @@ namespace SLZ.Marrow.Warehouse
                     defaultLitMat = AssetDatabase.LoadAssetAtPath<Material>("Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat");
                 }
 
-                EditorPreviewMeshGizmo.Draw("PreviewMesh", spawner.gameObject, spawner.GetCrateReference(), showLitMaterialPreview ? defaultLitMat : MarrowSDK.VoidMaterial, !showPreviewMesh, !showColliderBounds || !gizmoInRange, true);
-                spawner.EditorUpdateName();
+                var crateRef = spawner.GetCrateReference();
+                if (spawner != null && crateRef != null && spawner.showPreviewGizmo)
+                {
+                    EditorPreviewMeshGizmo.Draw("PreviewMesh", spawner.gameObject, crateRef, showLitMaterialPreview ? defaultLitMat : MarrowSDK.VoidMaterial, !showPreviewMesh, !showColliderBounds || !gizmoInRange, true);
+                    spawner.EditorUpdateName();
+                }
             }
         }
 

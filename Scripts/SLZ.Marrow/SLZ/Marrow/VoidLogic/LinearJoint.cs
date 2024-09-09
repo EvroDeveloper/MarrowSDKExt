@@ -1,20 +1,114 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
-using SLZ.Algorithms.Unity;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/LinearJoint")]
 	[AddComponentMenu("VoidLogic/Sinks/VoidLogic Linear Joint (Sliding)")]
 	[Support(SupportFlags.BetaSupported, "This works, but uses ConfigurableJoint instead of Marrow primitives.")]
-	public sealed class LinearJoint : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, ISerializationCallbackReceiver, IVoidLogicActuator
+	public sealed class LinearJoint : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, IVoidLogicActuator
 	{
+		public VoidLogicSubgraph Subgraph
+		{
+			[CompilerGenerated]
+			get
+			{
+				return null;
+			}
+			[CompilerGenerated]
+			set
+			{
+			}
+		}
+
+		public bool Deprecated
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
+
+		private void Awake()
+		{
+		}
+
+		private void OnEnable()
+		{
+		}
+
+		private void OnDisable()
+		{
+		}
+
+		private void OnDestroy()
+		{
+		}
+
+		private void Start()
+		{
+		}
+
+		void IVoidLogicNode.Initialize(NodeState nodeState)
+		{
+		}
+
+		void IVoidLogicActuator.Actuate(NodeState nodeState)
+		{
+		}
+
+		private void SETJOINT(float voltage = 1f)
+		{
+		}
+
+		private void WarpJoint()
+		{
+		}
+
+		public int InputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		public bool TryGetInputConnection(uint inputIndex, [Out] OutputPortReference connectedPort)
+		{
+			return default(bool);
+		}
+
+		public bool TryConnectPortToInput(OutputPortReference output, uint inputIndex)
+		{
+			return default(bool);
+		}
+
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public LinearJoint()
+		{
+		}
+
 		[SerializeField]
-		[Obsolete("Replace with `_previousConnection`")]
+		[HideInInspector]
+		private bool _deprecated;
+
+		[SerializeField]
+		[Tooltip("Dead Field: Please remove")]
+		[Obsolete("Dead Field: Please remove")]
+		[NonReorderable]
+		protected internal MonoBehaviour _previousNode;
+
+		[SerializeField]
 		[Tooltip("Previous node in the chain")]
-		[Interface(typeof(IVoidLogicSource), false)]
-		private MonoBehaviour _previousNode;
+		private OutputPortReference _previousConnection;
 
 		private float? _priorValue;
 
@@ -26,8 +120,8 @@ namespace SLZ.Marrow.VoidLogic
 
 		private Rigidbody _rigidBody;
 
-		[SerializeField]
 		[Header("Joint Control")]
+		[SerializeField]
 		private bool _varyTargetPosition;
 
 		[SerializeField]
@@ -73,82 +167,5 @@ namespace SLZ.Marrow.VoidLogic
 		private Vector3 _zMaxSpringDamperForce;
 
 		private static readonly PortMetadata _portMetadata;
-
-		public VoidLogicSubgraph Subgraph
-		{
-			[CompilerGenerated]
-			get
-			{
-				return null;
-			}
-			[CompilerGenerated]
-			set
-			{
-			}
-		}
-
-		public int InputCount => 0;
-
-		public PortMetadata PortMetadata => default(PortMetadata);
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnBeforeSerialize()
-		{
-		}
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnAfterDeserialize()
-		{
-		}
-
-		private void Awake()
-		{
-		}
-
-		private void OnEnable()
-		{
-		}
-
-		private void OnDisable()
-		{
-		}
-
-		private void OnDestroy()
-		{
-		}
-
-		private void Start()
-		{
-		}
-
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicActuator_002EActuate(ref NodeState nodeState)
-		{
-		}
-
-		private void SETJOINT(float voltage = 1f)
-		{
-		}
-
-		private void WarpJoint()
-		{
-		}
-
-        public bool TryGetInputAtIndex(uint idx, out IVoidLogicSource input)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnBeforeSerialize()
-        {
-            
-        }
-
-        public void OnAfterDeserialize()
-        {
-            
-        }
-
-        public void Actuate(ref NodeState nodeState)
-        {
-            
-        }
-    }
+	}
 }

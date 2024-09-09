@@ -5,7 +5,7 @@
             <ui:VisualElement name="welcomeHeaderImageContainer" style="width: 64px; height: 128px; margin-left: 10px;" />
             <ui:VisualElement style="flex-grow: 1; align-items: center; justify-content: flex-start; flex-direction: row;">
                 <ui:VisualElement style="margin-left: 30px;">
-                    <ui:Label text="Marrow SDK 1.1" display-tooltip-when-elided="true" name="headerLabel" style="font-size: 32px; -unity-font-style: bold; justify-content: center; -unity-text-align: middle-center;" />
+                    <ui:Label text="Marrow SDK" display-tooltip-when-elided="true" name="headerLabel" style="font-size: 32px; -unity-font-style: bold; justify-content: center; -unity-text-align: middle-center;" />
                     <ui:Label display-tooltip-when-elided="true" style="-unity-text-align: upper-center; font-size: 14px; -unity-font-style: italic; display: none;" />
                 </ui:VisualElement>
             </ui:VisualElement>

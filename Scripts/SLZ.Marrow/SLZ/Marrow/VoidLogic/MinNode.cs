@@ -1,18 +1,32 @@
+﻿using System;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
+	[AddComponentMenu("VoidLogic/VoidLogic Min")]
 	[Support(SupportFlags.Supported, null)]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Min")]
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/MinNode")]
-	public class MinNode : BaseNode
+	public sealed class MinNode : BaseNode
 	{
-		private static readonly PortMetadata _portMetadata;
-
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public MinNode()
+		{
+		}
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

@@ -1,15 +1,10 @@
+﻿using System;
 using System.Collections.Generic;
 
 namespace SLZ.Marrow.Zones
 {
 	public class ZoneManager
 	{
-		private readonly HashSet<Zone> _zones;
-
-		public int RegisteredZoneCount => 0;
-
-		public Zone[] RegisteredZones => null;
-
 		public void RegisterZone(Zone zone)
 		{
 		}
@@ -18,12 +13,10 @@ namespace SLZ.Marrow.Zones
 		{
 		}
 
-		public void RegisterZoneLink(ZoneLink zoneA, ZoneLink zoneB)
+		public ZoneManager()
 		{
 		}
 
-		public void UnregisterZoneLink(ZoneLink zoneA, ZoneLink zoneB)
-		{
-		}
+		private readonly HashSet<Zone> _zones;
 	}
 }

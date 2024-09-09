@@ -4,6 +4,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.0]
+
+### Added
+
+- Fixtures: DataCard representing Spawnables pinned to the world
+- Backlot Fixtures: Buttons, Switch, Lever, Slider, Airlock Door
+- EntityPose: DataCard that holds pose data for an Entity
+- AssetWarehouse Drag And Drop: Drag and Drop Spawnables and Fixtures straight from the warehouse into your scene!
+- Circuits: Wiring needed to connect fixtures together
+- Circuit Nodes: Add, Multiply, Remap, Value, FlipFlip, Xor
+
+### Changed
+
+
+### Fixed
+
+
+### Known Issues
+
+- Custom Spawnables unsupported
+
+
 ## [1.1.0]
 
 ### Added

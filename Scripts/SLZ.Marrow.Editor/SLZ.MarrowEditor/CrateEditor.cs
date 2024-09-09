@@ -8,10 +8,14 @@ using SLZ.Marrow.Warehouse;
  
 using UnityEditor.Callbacks;
 using UnityEditor.SceneManagement;
+
  
+
  
+
  
-using System;
+
+ 
 
 namespace SLZ.MarrowEditor
 {
@@ -127,29 +131,6 @@ namespace SLZ.MarrowEditor
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.ObjectField("Pallet", crate.Pallet, typeof(Pallet), false);
             EditorGUI.EndDisabledGroup();
-            bool tagIsNull = false;
-            if (script.Tags != null && script.Tags.Count > 0)
-            {
-                for (var t = 0; t < script.Tags.Count; t++)
-                {
-                    if (script.Tags[t].ToLower().ToString() == Barcode.EMPTY)
-                    {
-                        tagIsNull = true;
-                    }
-
-                    if (String.IsNullOrEmpty(script.Tags[t]))
-                    {
-                        tagIsNull = true;
-                        script.Tags[t] = Barcode.EMPTY;
-                    }
-                }
-            }
-
-            if (tagIsNull)
-            {
-                EditorGUILayout.HelpBox("A Tag on this Crate is null or empty.", MessageType.Error);
-            }
-
             bool bonetagIsNull = false;
             if (script.BoneTags != null && script.BoneTags.Tags != null && script.BoneTags.Tags.Count > 0)
             {

@@ -1,3 +1,5 @@
+﻿using System;
+using System.Runtime.InteropServices;
 using SLZ.Marrow.Utilities;
 using SLZ.VRMK;
 using UnityEngine;
@@ -7,6 +9,98 @@ namespace SLZ.Marrow
 {
 	public class AnimationRig : HeptaRig
 	{
+		public SLZ_Body body
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public SimpleTransform pelvisLocalAnimOff
+		{
+			get
+			{
+				return default(SimpleTransform);
+			}
+		}
+
+		public float suppressChestVelocityTwist
+		{
+			get
+			{
+				return 0f;
+			}
+			set
+			{
+			}
+		}
+
+		public override void OnStart()
+		{
+		}
+
+		public override void OnRigEnable(bool reEnable)
+		{
+		}
+
+		public override void OnEarlyUpdate()
+		{
+		}
+
+		private void OnFootSolve(Rig inRig, float deltaTime)
+		{
+		}
+
+		private void UpdateHeptaBody2(Rig inRig, float deltaTime, Vector2 velocity, Vector2 accel)
+		{
+		}
+
+		private void ReapplyTorsoProximity(Rig inRig, float deltaTime)
+		{
+		}
+
+		public override void Teleport(SimpleTransform displace, bool zeroVelocity = false)
+		{
+		}
+
+		public override void SetAvatar(SLZ.VRMK.Avatar avatar)
+		{
+		}
+
+		protected Vector3 BodyVelocity(Rig inRig, Vector2 vel, Vector2 accel, float deltaTime)
+		{
+			return default(Vector3);
+		}
+
+		private SimpleTransform AdditiveChest(SLZ.VRMK.Avatar avatar, SimpleTransform head, SimpleTransform handLf, SimpleTransform handRt, Rig inRig, float deltaTime, [Out] SimpleTransform outNeck, float mantle = 0f, float footSupported = 1f, float handSupported = 0f, float physKneeOffset = 0f)
+		{
+			return default(SimpleTransform);
+		}
+
+		private float SolveT1UpOffset(float heightWeight, float mantle, float footSupported, float handSupported, float velocityInLegs)
+		{
+			return 0f;
+		}
+
+		protected SimpleTransform AdditivePelvis(SLZ.VRMK.Avatar avatar, SimpleTransform chest, Rig inRig, float deltaTime, [Out] SimpleTransform outSpine, Quaternion pelvisLocalAnimOff, float mantle = 0f, float footSupported = 1f, float handSupported = 0f, float physKneeOffset = 0f)
+		{
+			return default(SimpleTransform);
+		}
+
+		protected float SolveSacrumUpOffset(float heightWeight, float mantle, float footSupported, float handSupported, float velocityInLegs)
+		{
+			return 0f;
+		}
+
+		public override void SetBodyState(RigManager.BodyState toBodyState, RigManager.BodyState fromBodyState)
+		{
+		}
+
+		public AnimationRig()
+		{
+		}
+
 		[Header("AnimationRig")]
 		public float spineCrouchOffset;
 
@@ -81,79 +175,5 @@ namespace SLZ.Marrow
 		private float _blendToSampleTime;
 
 		private Quaternion[] _stateBlendSample;
-
-		public SLZ_Body body => null;
-
-		public SimpleTransform pelvisLocalAnimOff => default(SimpleTransform);
-
-		public float suppressChestVelocityTwist
-		{
-			get
-			{
-				return 0f;
-			}
-			set
-			{
-			}
-		}
-
-		public override void OnStart()
-		{
-		}
-
-		public override void OnRigEnable(bool reEnable)
-		{
-		}
-
-		public override void OnEarlyUpdate()
-		{
-		}
-
-		private void UpdateHeptaBody2(Rig inRig, float deltaTime, Vector2 velocity, Vector2 accel)
-		{
-		}
-
-		private void ReapplyTorsoProximity(Rig inRig, float deltaTime)
-		{
-		}
-
-		public override void Teleport(SimpleTransform displace, bool zeroVelocity = false)
-		{
-		}
-
-		public override void SetAvatar(SLZ.VRMK.Avatar avatar)
-		{
-		}
-
-		protected Vector3 BodyVelocity(Rig inRig, Vector2 vel, Vector2 accel, float deltaTime)
-		{
-			return default(Vector3);
-		}
-
-		private SimpleTransform AdditiveChest(SLZ.VRMK.Avatar avatar, ref SimpleTransform head, ref SimpleTransform handLf, ref SimpleTransform handRt, Rig inRig, float deltaTime, out SimpleTransform outNeck, float mantle = 0f, float footSupported = 1f, float handSupported = 0f, float physKneeOffset = 0f)
-		{
-			outNeck = default(SimpleTransform);
-			return default(SimpleTransform);
-		}
-
-		private float SolveT1UpOffset(float heightWeight, float mantle, float footSupported, float handSupported, float velocityInLegs)
-		{
-			return 0f;
-		}
-
-		protected SimpleTransform AdditivePelvis(SLZ.VRMK.Avatar avatar, SimpleTransform chest, Rig inRig, float deltaTime, out SimpleTransform outSpine, Quaternion pelvisLocalAnimOff, float mantle = 0f, float footSupported = 1f, float handSupported = 0f, float physKneeOffset = 0f)
-		{
-			outSpine = default(SimpleTransform);
-			return default(SimpleTransform);
-		}
-
-		protected float SolveSacrumUpOffset(float heightWeight, float mantle, float footSupported, float handSupported, float velocityInLegs)
-		{
-			return 0f;
-		}
-
-		public override void SetBodyState(RigManager.BodyState toBodyState, RigManager.BodyState fromBodyState)
-		{
-		}
 	}
 }

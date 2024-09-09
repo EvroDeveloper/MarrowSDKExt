@@ -1,3 +1,4 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
@@ -10,20 +11,8 @@ namespace SLZ.Marrow.VoidLogic
 	[MarrowPlugin("SLZ.Marrow.VoidLogic", "VoidLogicPlugin", "0.0.1")]
 	public class VoidLogicPlugin : IMarrowPluginLevelCallbacks, IMarrowPlugin
 	{
-		[PublicAPI]
-		public const string PluginNamespace = "SLZ.Marrow.VoidLogic";
-
-		[PublicAPI]
-		public const string PluginName = "VoidLogicPlugin";
-
-		[PublicAPI]
-		public const string PluginVersion = "0.0.1";
-
-		private GameObject _holder;
-
 		public static VoidLogicManager CurrentManager
 		{
-			[MethodImpl(256)]
 			[CompilerGenerated]
 			get
 			{
@@ -35,7 +24,7 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		private UniTask SLZ_002EMarrow_002EPlugins_002EIMarrowPluginLevelCallbacks_002EOnBeforeLevelLoad(LevelCrateReference level)
+		UniTask IMarrowPluginLevelCallbacks.OnBeforeLevelLoad(LevelCrateReference level)
 		{
 			return default(UniTask);
 		}
@@ -44,5 +33,20 @@ namespace SLZ.Marrow.VoidLogic
 		{
 			return default(UniTask);
 		}
+
+		public VoidLogicPlugin()
+		{
+		}
+
+		[PublicAPI]
+		public const string PluginNamespace = "SLZ.Marrow.VoidLogic";
+
+		[PublicAPI]
+		public const string PluginName = "VoidLogicPlugin";
+
+		[PublicAPI]
+		public const string PluginVersion = "0.0.1";
+
+		private GameObject _holder;
 	}
 }

@@ -1,37 +1,47 @@
-using System.Runtime.CompilerServices;
+﻿using System;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Passthrough")]
+	[AddComponentMenu("VoidLogic/VoidLogic Passthrough")]
 	[Support(SupportFlags.Supported, null)]
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/PassthroughNode")]
-	public class PassthroughNode : BaseNode
+	public sealed class PassthroughNode : BaseNode
 	{
-		[SerializeField]
-		private bool _cutoff;
-
-		private static readonly PortMetadata _portMetadata;
-
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
 
-		[MethodImpl(256)]
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
 		public void Toggle()
 		{
 		}
 
-		[MethodImpl(256)]
 		public void TurnOn()
 		{
 		}
 
-		[MethodImpl(256)]
 		public void TurnOff()
 		{
 		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public PassthroughNode()
+		{
+		}
+
+		[SerializeField]
+		private bool _cutoff;
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

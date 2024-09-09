@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+ 
 using SLZ.Marrow.Warehouse;
 using UnityEditor;
 using UnityEditor.Search;
@@ -12,7 +13,7 @@ using UnityEngine.UIElements;
 
 namespace SLZ.MarrowEditor
 {
-    class ScannableSelector : EditorWindow
+    public class ScannableSelector : EditorWindow
     {
         public static void Create()
         {
@@ -20,13 +21,33 @@ namespace SLZ.MarrowEditor
             window.CollectScannables();
         }
 
-        public static ScannableSelector Create(Type scannableType, Action<Barcode> onCrateSelected)
+        public static ScannableSelector Create(Type scannableType, Action<Barcode> onCrateSelected, string initialQuery = "", string additionalQuery = "", ScannableSelectorFilter filter = default)
         {
             ScannableSelector window = EditorWindow.CreateInstance<ScannableSelector>();
             window.scannableType = scannableType;
             if (onCrateSelected != null)
                 window.onCrateSelected = onCrateSelected;
             window.titleContent = new GUIContent($"Select {scannableType.Name}");
+            if (!string.IsNullOrEmpty(filter.token))
+            {
+                window.AddFilter(filter);
+                if (!string.IsNullOrEmpty(initialQuery))
+                {
+                    if (initialQuery.StartsWith(filter.token))
+                        window.SetQuery(initialQuery);
+                    else
+                        window.SetQuery($"{filter.token}:{initialQuery}");
+                }
+
+                if (!string.IsNullOrEmpty(additionalQuery))
+                {
+                    if (additionalQuery.StartsWith(filter.token))
+                        window.additionalQuery = additionalQuery;
+                    else
+                        window.additionalQuery = $"{filter.token}:{additionalQuery}";
+                }
+            }
+
             window.CollectScannables();
             window.ShowAuxWindow();
             return window;
@@ -40,7 +61,27 @@ namespace SLZ.MarrowEditor
         private List<Scannable> filteredScannables = new List<Scannable>();
         private QueryEngine<Scannable> queryEngine;
         private string filterText = string.Empty;
-        private CratePreview scannablePreview;
+        private ObjectPreview scannablePreview;
+        private Scannable fakeScannable;
+        private string additionalQuery = "";
+        public struct ScannableSelectorFilter
+        {
+            public string token;
+            public Func<Scannable, string> filter;
+            public string internalQuery;
+            public ScannableSelectorFilter(string token, Func<Scannable, string> filter, string internalQuery = null)
+            {
+                this.token = token;
+                this.filter = filter;
+                this.internalQuery = internalQuery;
+            }
+
+            public bool IsValid()
+            {
+                return !string.IsNullOrEmpty(token) && filter != null;
+            }
+        }
+
         public void CollectScannables()
         {
             allScannables?.Clear();
@@ -51,17 +92,24 @@ namespace SLZ.MarrowEditor
             if (typeof(DataCard).IsAssignableFrom(scannableType))
                 allScannables.AddRange(AssetWarehouse.Instance.GetDataCards());
             allScannables = allScannables.Where(scannable => scannableType.IsAssignableFrom(scannable.GetType())).OrderBy(scannable => scannable.Title).ToList();
-            allScannables.Insert(0, null);
+            if (!fakeScannable)
+            {
+                fakeScannable = ScriptableObject.CreateInstance<Pallet>();
+                fakeScannable.Title = "None";
+                fakeScannable.Description = "";
+                allScannables.Insert(0, fakeScannable);
+            }
+
             FilterItems(string.Empty);
             listView.itemsSource = filteredScannables;
         }
 
         void FilterItems(string filterText)
         {
+            string fullFilterText = $"{additionalQuery} {filterText}";
             filteredScannables.Clear();
-            var query = queryEngine.Parse(filterText);
+            var query = queryEngine.Parse(fullFilterText);
             query.returnPayloadIfEmpty = true;
-            filteredScannables.Add(null);
             foreach (var scannable in query.Apply(allScannables))
             {
                 if (scannable != null)
@@ -69,6 +117,27 @@ namespace SLZ.MarrowEditor
             }
 
             listView?.Rebuild();
+        }
+
+        void AddFilter(ScannableSelectorFilter filter)
+        {
+            if (queryEngine != null)
+            {
+                queryEngine.AddFilter(filter.token, filter.filter);
+            }
+        }
+
+        void SetQuery(string query)
+        {
+            if (!string.IsNullOrEmpty(query))
+            {
+                if (scannableSearch.value != query)
+                {
+                    scannableSearch.value = query;
+                }
+
+                FilterItems(scannableSearch.value);
+            }
         }
 
         public void OnEnable()
@@ -121,25 +190,30 @@ namespace SLZ.MarrowEditor
                 var scannable = filteredScannables[i];
                 if (scannable != null)
                 {
-                    label.text = scannable.Title;
-                    label.tooltip = scannable.Description;
-                    image.image = EditorGUIUtility.GetIconForObject(scannable);
-                }
-                else
-                {
-                    label.text = "None";
-                }
-
-                if (scannable is Crate || scannable is DataCard)
-                {
-                    Pallet pallet = null;
-                    if (scannable is Crate crate)
-                        pallet = crate.Pallet;
-                    if (scannable is DataCard dataCard)
-                        pallet = dataCard.Pallet;
-                    if (pallet != null)
+                    if (scannable == fakeScannable)
                     {
-                        palletLabel.text = pallet.Title;
+                        label.text = "None";
+                        label.tooltip = "None";
+                        image.image = null;
+                        palletLabel.text = "";
+                    }
+                    else
+                    {
+                        label.text = scannable.Title;
+                        label.tooltip = scannable.Description;
+                        image.image = EditorGUIUtility.GetIconForObject(scannable);
+                        if (scannable is Crate || scannable is DataCard)
+                        {
+                            Pallet pallet = null;
+                            if (scannable is Crate crate)
+                                pallet = crate.Pallet;
+                            if (scannable is DataCard dataCard)
+                                pallet = dataCard.Pallet;
+                            if (pallet != null)
+                            {
+                                palletLabel.text = pallet.Title;
+                            }
+                        }
                     }
                 }
             };
@@ -154,9 +228,15 @@ namespace SLZ.MarrowEditor
             };
             listView.onSelectionChange += objects =>
             {
-                if (objects.Any())
+                var objectsList = objects.ToList();
+                object selectedObject = null;
+                if (objectsList.Count > 0)
                 {
-                    Scannable scannable = objects.First() as Scannable;
+                    selectedObject = objectsList.First();
+                }
+
+                if (selectedObject is Scannable scannable && scannable != fakeScannable)
+                {
                     onCrateSelected?.Invoke((scannable == null ? Barcode.EmptyBarcode() : scannable.Barcode));
                     SetPreview(scannable);
                 }
@@ -218,36 +298,49 @@ namespace SLZ.MarrowEditor
 
         private void OnDisable()
         {
+            if (fakeScannable)
+                DestroyImmediate(fakeScannable);
             scannablePreview?.Cleanup();
         }
 
         private void SetPreview(Scannable scannable)
         {
-            if (EditorPrefs.GetBool("UnlockEditingScannables", false))
+            if (scannable != null && scannable is Crate crate)
             {
                 if (scannablePreview == null)
                 {
                     scannablePreview = new CratePreview();
                 }
 
-                if (scannable != null && scannable is Crate crate)
+                var replaceMeLabel = rootVisualElement.Q<Label>("replaceMeLabel");
+                replaceMeLabel.text = crate.Title;
+                scannablePreview.Initialize(new UnityEngine.Object[] { crate });
+                var previewIMGUIContainer = rootVisualElement.Q<IMGUIContainer>("scannablePreviewIMGUI");
+                var bgGUIStyle = new GUIStyle();
+                previewIMGUIContainer.onGUIHandler = () => scannablePreview.OnInteractivePreviewGUI(previewIMGUIContainer.contentRect, bgGUIStyle);
+            }
+            else if (scannable != null && scannable is EntityPose entityPose)
+            {
+                if (scannablePreview == null)
                 {
-                    var replaceMeLabel = rootVisualElement.Q<Label>("replaceMeLabel");
-                    replaceMeLabel.text = crate.Title;
-                    scannablePreview.Initialize(new UnityEngine.Object[] { crate });
-                    var previewIMGUIContainer = rootVisualElement.Q<IMGUIContainer>("scannablePreviewIMGUI");
-                    var bgGUIStyle = new GUIStyle();
-                    previewIMGUIContainer.onGUIHandler = () => scannablePreview.OnInteractivePreviewGUI(previewIMGUIContainer.contentRect, bgGUIStyle);
+                    scannablePreview = new EntityPosePreview();
                 }
-                else
+
+                var replaceMeLabel = rootVisualElement.Q<Label>("replaceMeLabel");
+                replaceMeLabel.text = entityPose.Title;
+                scannablePreview.Initialize(new UnityEngine.Object[] { entityPose });
+                var previewIMGUIContainer = rootVisualElement.Q<IMGUIContainer>("scannablePreviewIMGUI");
+                var bgGUIStyle = new GUIStyle();
+                previewIMGUIContainer.onGUIHandler = () => scannablePreview.OnInteractivePreviewGUI(previewIMGUIContainer.contentRect, bgGUIStyle);
+            }
+            else
+            {
+                var replaceMeLabel = rootVisualElement.Q<Label>("replaceMeLabel");
+                replaceMeLabel.text = scannable == null ? "None" : scannable.Title;
+                var previewIMGUIContainer = rootVisualElement.Q<IMGUIContainer>("scannablePreviewIMGUI");
+                previewIMGUIContainer.onGUIHandler = () =>
                 {
-                    var replaceMeLabel = rootVisualElement.Q<Label>("replaceMeLabel");
-                    replaceMeLabel.text = scannable == null ? "None" : $"??{scannable.Title}??";
-                    var previewIMGUIContainer = rootVisualElement.Q<IMGUIContainer>("scannablePreviewIMGUI");
-                    previewIMGUIContainer.onGUIHandler = () =>
-                    {
-                    };
-                }
+                };
             }
         }
 

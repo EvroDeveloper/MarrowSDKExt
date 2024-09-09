@@ -1,14 +1,10 @@
 using System;
 using System.Reflection;
 using SLZ.Marrow.Warehouse;
- 
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
- 
 using UnityEngine.UIElements;
-
- 
 
 namespace SLZ.MarrowEditor
 {
@@ -37,6 +33,8 @@ namespace SLZ.MarrowEditor
 
     public class ScannableReferenceElement : VisualElement
     {
+        public Action onOpenSelector;
+        private SerializedProperty serializedProperty;
         private Label objectFieldTitleLabel;
         private ObjectField scannableObjectField;
         private PropertyField barcodeField;
@@ -53,6 +51,7 @@ namespace SLZ.MarrowEditor
         private static Texture2D objectSelectorIconTexture;
         private static Color buttonColor = new Color(0.2156863f, 0.2156863f, 0.2156863f);
         private static Color buttonHoverColor = new Color(0.2980392f, 0.2980392f, 0.2980392f);
+        private ScannableSelector.ScannableSelectorFilter scannableSelectorFilter;
         public virtual void SetObjectType(FieldInfo fieldInfo)
         {
             scannableObjectType = typeof(Scannable);
@@ -94,24 +93,26 @@ namespace SLZ.MarrowEditor
 
         public ScannableReferenceElement(SerializedProperty property, FieldInfo fieldInfo)
         {
+            this.serializedProperty = property;
+            this.name = nameof(ScannableReferenceElement);
             SetObjectType(fieldInfo);
             CacheIconTextures();
             barcodeIdProp = property.FindPropertyRelative("_barcode").FindPropertyRelative("_id");
             barcodeField = new PropertyField(property.FindPropertyRelative("_barcode"), property.displayName);
+            barcodeField.name = "ScannableBarcodeField";
             barcodeField.style.flexGrow = 1;
-            barcodeField.RegisterValueChangeCallback(barcodeText =>
-            {
-                LoadScannableObjectFromBarcode(property);
-                AutoModeDetection(property);
-                SetMode(showBarcode, property);
-            });
             scannableObjectField = new ObjectField(scannableObjectType.Name);
+            scannableObjectField.name = "ScannableObjectField";
             scannableObjectField.label = property.displayName;
             scannableObjectField.style.flexGrow = 1;
             scannableObjectField.style.marginRight = -2;
             scannableObjectField.objectType = scannableObjectType;
             scannableObjectField.tooltip = GetBarcodeValue();
             objectFieldTitleLabel = scannableObjectField.Q<VisualElement>(className: "unity-object-field-display").Q(className: "unity-object-field__object").Q<Label>(className: "unity-object-field-display__label");
+            objectFieldTitleLabel.RegisterValueChangedCallback(evt =>
+            {
+                SetScannableFieldText(scannableObjectField.value as IScannable);
+            });
             Button nippleButton = new Button();
             nippleButton.style.backgroundColor = new Color(0.2156863f, 0.2156863f, 0.2156863f);
             nippleButton.style.height = 16;
@@ -143,19 +144,40 @@ namespace SLZ.MarrowEditor
             scannableObjectField.Q(className: "unity-base-field__input").Add(nippleButton);
             nippleButton.clicked += () =>
             {
+                onOpenSelector?.Invoke();
                 ScannableSelector.Create(scannableObjectType, barcode =>
                 {
+                    var isScannable = AssetWarehouse.Instance.TryGetScannable(barcode, out var scannable);
+                    if (isScannable && !ValidateScannable(scannable))
+                    {
+                        barcode = Barcode.EmptyBarcode();
+                    }
+
                     property.serializedObject.Update();
                     SetBarcodeValue(barcode.ID);
                     property.serializedObject.ApplyModifiedProperties();
                     LoadScannableObjectFromBarcode(property);
                     AutoModeDetection(property);
                     SetMode(showBarcode, property);
-                });
+                    if (isScannable)
+                    {
+                        SetScannableFieldText(scannable);
+                    }
+                }, initialQuery: "", additionalQuery: scannableSelectorFilter.internalQuery, filter: scannableSelectorFilter);
             };
+            scannableObjectField.RegisterCallback<AttachToPanelEvent>(evt =>
+            {
+                LoadScannableObjectFromBarcode(property);
+                AutoModeDetection(property);
+                SetMode(showBarcode, property);
+                if (scannableObjectField.value is IScannable scannable)
+                {
+                    SetScannableFieldText(scannable);
+                }
+            });
             scannableObjectField.RegisterValueChangedCallback(obj =>
             {
-                if (obj.newValue != null)
+                if (obj.newValue != null && ValidateScannable(obj.newValue))
                 {
                     property.serializedObject.Update();
                     SetBarcodeValue((obj.newValue as Scannable)?.Barcode.ID);
@@ -174,6 +196,17 @@ namespace SLZ.MarrowEditor
 
                 SetMode(showBarcode, property);
             });
+            bool ValidateScannable(UnityEngine.Object unityObj)
+            {
+                bool valid = unityObj != null && unityObj is Scannable;
+                if (unityObj is Scannable scannable && scannableSelectorFilter.IsValid() && !string.IsNullOrEmpty(scannableSelectorFilter.internalQuery))
+                {
+                    valid = scannableSelectorFilter.filter.Invoke(scannable) == scannableSelectorFilter.internalQuery;
+                }
+
+                return valid;
+            }
+
             switchModeButton = new Button(() =>
             {
                 showBarcode = !showBarcode;
@@ -220,6 +253,11 @@ namespace SLZ.MarrowEditor
             });
         }
 
+        public void SetScannableQueryFilter(ScannableSelector.ScannableSelectorFilter scannableSelectorFilter)
+        {
+            this.scannableSelectorFilter = scannableSelectorFilter;
+        }
+
         private void CacheIconTextures()
         {
             if (nippleIconTexture == null)
@@ -237,7 +275,8 @@ namespace SLZ.MarrowEditor
             Scannable scannable = null;
             if (AssetWarehouse.ready)
             {
-                AssetWarehouse.Instance.TryGetScannable(new Barcode(GetBarcodeValue()), out scannable);
+                if (Barcode.IsValidString(GetBarcodeValue()))
+                    AssetWarehouse.Instance.TryGetScannable(new Barcode(GetBarcodeValue()), out scannable);
                 scannableObjectField.SetValueWithoutNotify(scannable);
                 if (scannable != null)
                     SetScannableFieldText(scannable);
@@ -256,18 +295,21 @@ namespace SLZ.MarrowEditor
 
         private void SetScannableFieldText(IScannable scannable)
         {
-            Pallet pallet = null;
-            if (scannable is Crate crate)
-                pallet = crate.Pallet;
-            if (scannable is DataCard dataCard)
-                pallet = dataCard.Pallet;
-            if (pallet != null)
+            if (scannable != null)
             {
-                SetScannableFieldText(scannable.Title, pallet.Title);
-            }
-            else
-            {
-                SetScannableFieldText(scannable.Title, scannable.GetType().Name);
+                Pallet pallet = null;
+                if (scannable is Crate crate)
+                    pallet = crate.Pallet;
+                if (scannable is DataCard dataCard)
+                    pallet = dataCard.Pallet;
+                if (pallet != null)
+                {
+                    SetScannableFieldText(scannable.Title, pallet.Title);
+                }
+                else
+                {
+                    SetScannableFieldText(scannable.Title, scannable.GetType().Name);
+                }
             }
         }
 

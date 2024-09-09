@@ -381,4 +381,9 @@ namespace SLZ.MarrowEditor
     public class MarrowScenePropertyDrawer : MarrowAssetPropertyDrawer
     {
     }
+
+    [CustomPropertyDrawer(typeof(MarrowMonoScript))]
+    public class MarrowMonoScriptPropertyDrawer : MarrowAssetPropertyDrawer
+    {
+    }
 }

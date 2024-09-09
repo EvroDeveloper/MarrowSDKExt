@@ -1,6 +1,6 @@
 {
   "name": "com.stresslevelzero.marrow.sdk.extended",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "Extended Marrow SDK",
   "description": "Extended Marrow Software Development Kit. Used to create content with Pallets and Crates for Marrow infused games.",
   "unity": "2021.3",

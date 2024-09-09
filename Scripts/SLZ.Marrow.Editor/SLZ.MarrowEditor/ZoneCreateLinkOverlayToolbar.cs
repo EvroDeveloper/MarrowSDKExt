@@ -42,6 +42,11 @@ namespace SLZ.MarrowEditor
         static Vector3 zoneBoundsInsetMenu = new Vector3(0.1f, 0.1f, 0.1f);
         TagQuery playerTagQuery;
         LayerMask layerCollideAllowed = ~0;
+        public static bool gizmoZonelabMode = false;
+        public static bool gizmoZonelabItemMode = false;
+        public static bool gizmoZoneLinkHandles = false;
+        [Range(0, 1000)]
+        public static int gizmoZoneLinkHandlesRange = 50;
         public override VisualElement CreatePanelContent()
         {
             SceneVisibilityManager svm = SceneVisibilityManager.instance;
@@ -774,17 +779,17 @@ namespace SLZ.MarrowEditor
             {
                 if (zoneLinkingHandlesToggle.value)
                 {
-                    Zone.gizmoZoneLinkHandles = true;
+                    gizmoZoneLinkHandles = true;
                 }
                 else
                 {
-                    Zone.gizmoZoneLinkHandles = false;
+                    gizmoZoneLinkHandles = false;
                 }
             });
             SliderInt zoneLinkingHandlesRangeSlider = rootVisualElement.Q<SliderInt>("zoneLinkingHandlesRangeSlider");
             zoneLinkingHandlesRangeSlider.RegisterValueChangedCallback((evt) =>
             {
-                Zone.gizmoZoneLinkHandlesRange = zoneLinkingHandlesRangeSlider.value;
+                gizmoZoneLinkHandlesRange = zoneLinkingHandlesRangeSlider.value;
             });
             Button addLinkedZonesToSelectionButton = rootVisualElement.Q<Button>("addLinkedZonesToSelectionButton");
             Image addLinkedZonesToSelectionIconImage = new Image
@@ -889,7 +894,7 @@ namespace SLZ.MarrowEditor
                 SortLinkedZonesByNameOnClick();
             };
             zonelabModeIconImage.style.left = 124;
-            Zone.gizmoZoneLinkHandlesRange = zoneLinkingHandlesRangeSlider.value;
+            gizmoZoneLinkHandlesRange = zoneLinkingHandlesRangeSlider.value;
             zoneBoundsInset = zoneCreateBoundsInset.value;
             zoneBoundsInsetMenu = zoneBoundsInset;
             MarrowSDKPreferences.gizmoShowZoneGizmos = EditorPrefs.GetBool("gizmoShowZoneGizmos", true);
@@ -968,7 +973,7 @@ namespace SLZ.MarrowEditor
             zonelabModeToggle.text = "";
             zonelabModeToggle.tooltip = "Only Zones & ZoneItems are Selectable in Scene";
             svm.DisablePicking(nonZoneGameObjects.ToArray(), false);
-            Zone.gizmoZonelabMode = true;
+            gizmoZonelabMode = true;
         }
 
         private void DisableZonelabMode(SceneVisibilityManager svm, Toggle zonelabModeToggle)
@@ -976,7 +981,7 @@ namespace SLZ.MarrowEditor
             zonelabModeToggle.text = "";
             zonelabModeToggle.tooltip = "All objects are selectable";
             svm.EnableAllPicking();
-            Zone.gizmoZonelabMode = false;
+            gizmoZonelabMode = false;
         }
 
         private void ToggleToolbarDefaults()

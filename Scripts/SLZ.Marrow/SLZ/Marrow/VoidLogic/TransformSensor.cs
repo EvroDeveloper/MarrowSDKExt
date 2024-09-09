@@ -1,23 +1,13 @@
+﻿using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
 	[Support(SupportFlags.BetaSupported, null)]
-	[AddComponentMenu("VoidLogic/Bonelab/VoidLogic Transform Sensor")]
-	public class TransformSensor : MonoBehaviour, IVoidLogicSource, IVoidLogicNode, IVoidLogicSensor
+	[AddComponentMenu("VoidLogic/Sources/VoidLogic Transform Sensor")]
+	public sealed class TransformSensor : MonoBehaviour, IVoidLogicSource, IVoidLogicNode, IVoidLogicSensor
 	{
-		[SerializeField]
-		private Transform _anchor;
-
-		[SerializeField]
-		private Transform _connectedTransform;
-
-		[SerializeField]
-		private bool _negate;
-
-		private static readonly PortMetadata _portMetadata;
-
 		public VoidLogicSubgraph Subgraph
 		{
 			[CompilerGenerated]
@@ -31,9 +21,21 @@ namespace SLZ.Marrow.VoidLogic
 			}
 		}
 
-		public int OutputCount => 0;
+		public bool Deprecated
+		{
+			get
+			{
+				return default(bool);
+			}
+		}
 
-		public PortMetadata PortMetadata => default(PortMetadata);
+		public int OutputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
 		private void Awake()
 		{
@@ -51,28 +53,48 @@ namespace SLZ.Marrow.VoidLogic
 		{
 		}
 
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicSensor_002EReadSensors(ref NodeState nodeState)
+		void IVoidLogicNode.Initialize(NodeState nodeState)
 		{
 		}
 
-		[MethodImpl(256)]
+		void IVoidLogicSensor.ReadSensors(NodeState nodeState)
+		{
+		}
+
 		private float _wrap(float angleDegrees)
 		{
 			return 0f;
 		}
 
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicSource_002ECalculate(ref NodeState nodeState)
+		void IVoidLogicSource.Calculate(NodeState nodeState)
 		{
 		}
 
-        public void Calculate(ref NodeState nodeState)
-        {
-            throw new System.NotImplementedException();
-        }
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
 
-        public void ReadSensors(ref NodeState nodeState)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+		public TransformSensor()
+		{
+		}
+
+		[HideInInspector]
+		[SerializeField]
+		private bool _deprecated;
+
+		[SerializeField]
+		private Transform _anchor;
+
+		[SerializeField]
+		private Transform _connectedTransform;
+
+		[SerializeField]
+		private bool _negate;
+
+		private static readonly PortMetadata _portMetadata;
+	}
 }

@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.stresslevelzero.marrow.sdk/Editor/Assets/EditorStyleSheets/MarrowStyles.uss?fileID=7433441132597879392&amp;guid=7ebe2475af85eae4ca7aeb90fab90275&amp;type=3#MarrowStyles" />
+    <ui:VisualElement name="rootContainer">
+        <ui:Foldout text="Usage Info" name="usageInfo" value="false">
+            <ui:Label display-tooltip-when-elided="true" text="The Event Actuator reads a signal from the Input circuit or Node and fires events based on the value.  &lt;br&gt;&#10;- &lt;i&gt;Input Updated&lt;/i&gt; is an expensive listener and should be used with caution because all listener callbacks will be fired every time the Input value changes.  &lt;br&gt;&#10;- &lt;i&gt;Input Rose&lt;/i&gt; triggers its events when the input signal meets or exceeds the High Threshold. &lt;br&gt;&#10;- &lt;i&gt;Input Held&lt;/i&gt; triggers its events while the input signal is sustained at or above the High Threshold. &lt;br&gt;&#10;- &lt;i&gt;Input Fell&lt;/i&gt; triggers its events when the input signal equals or falls below the Low Threshold. &lt;br&gt;&#10;- &lt;i&gt;Input Rose OneShot&lt;/i&gt; triggers its events only the very first time the input signal meets or exceeds the High Threshold. &lt;br&gt;" name="eventActuatorInfo" style="white-space: normal; font-size: 12px;" />
+            <ui:Button text="MarrowSDK Documentation - EventActuator" display-tooltip-when-elided="true" name="marrowDocsButton" binding-path="marrowDocsButton" tooltip="Open the MarrowSDK Documentation in the default web browser." style="margin-top: 10px; width: auto; align-items: auto; justify-content: flex-start;" />
+        </ui:Foldout>
+        <ui:VisualElement name="validationFeedback" style="visibility: visible; display: flex; margin-bottom: 0;">
+            <ui:IMGUIContainer name="imguiValidationContainer" style="margin-bottom: 10px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="fieldsContainer" />
+        <ui:VisualElement name="imguiInspectorContainer" style="display: flex;">
+            <ui:IMGUIContainer name="imguiInspector" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -185,10 +185,13 @@ namespace SLZ.MarrowEditor
                 label.parent?.RemoveFromClassList("forceHover");
             }
 
-            if (String.IsNullOrEmpty(sdBrushTargetTextField.value) == false)
+            if (sdBrushTargetTextField != null && String.IsNullOrEmpty(sdBrushTargetTextField.value) == false)
             {
-                Label targetLabel = tree.Query<Label>("sdLabelField").Where(elem => elem.text.Replace("Surface Data: ", "") == sdBrushTargetTextField.value).First();
-                targetLabel.parent.AddToClassList("forceHover");
+                Label targetLabel = tree.Query<Label>("sdLabelField").Where(elem => elem.text?.Replace("Surface Data: ", "") == sdBrushTargetTextField.value).First();
+                if (targetLabel != null)
+                {
+                    targetLabel.parent.AddToClassList("forceHover");
+                }
             }
         }
 

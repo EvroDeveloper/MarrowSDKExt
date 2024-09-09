@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
-using SLZ.Algorithms.Unity;
+using System.Runtime.InteropServices;
 using SLZ.Marrow.Interaction;
 using SLZ.Marrow.Utilities;
 using SLZ.Marrow.VoidLogic;
@@ -9,41 +9,10 @@ using UnityEngine;
 
 namespace SLZ.Marrow.Zones
 {
-	[Support(SupportFlags.Unsupported, "Not (yet?) supported.")]
-	[AddComponentMenu("VoidLogic/Sinks/VoidLogic Zone Trigger")]
-	public class ZoneTriggerNode : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, ISerializationCallbackReceiver, IVoidLogicSource
+	[Support(SupportFlags.Deprecated, "Replaced by ZoneTriggerSource.")]
+	[AddComponentMenu(null)]
+	public class ZoneTriggerNode : MonoBehaviour, IVoidLogicSink, IVoidLogicNode, IVoidLogicSource
 	{
-		[SerializeField]
-		private Zone _zone;
-
-		public EntityAggregator aggregator;
-
-		[Tooltip("Previous node(s) in the chain")]
-		[SerializeField]
-		[Interface(typeof(IVoidLogicSource), false)]
-		[Obsolete("Replace with `_previousConnections`")]
-		private MonoBehaviour[] _previous;
-
-		[NonReorderable]
-		[Tooltip("Previous node(s) in the chain")]
-		[SerializeField]
-
-		public UltEvent<MarrowBody> OnBodyTriggerEnter;
-
-		public UltEvent<MarrowBody> OnBodyTriggerExit;
-
-		public UltEvent<MarrowEntity> OnEntityTriggerEnter;
-
-		public UltEvent<MarrowEntity> OnEntityTriggerExit;
-
-		[ReadOnly(false)]
-		[SerializeField]
-		private float logicMultiplier;
-
-		protected internal float _cachedValue;
-
-		private static readonly PortMetadata _portMetadata;
-
 		public VoidLogicSubgraph Subgraph
 		{
 			[CompilerGenerated]
@@ -57,31 +26,20 @@ namespace SLZ.Marrow.Zones
 			}
 		}
 
-		protected bool IsCachedInternal
+		public bool Deprecated
 		{
-			[CompilerGenerated]
 			get
 			{
-				return false;
+				return default(bool);
 			}
-			[CompilerGenerated]
-			private set
+		}
+
+		public int OutputCount
+		{
+			get
 			{
+				return 0;
 			}
-		}
-
-		public int OutputCount => 0;
-
-		public int InputCount => 0;
-
-		public PortMetadata PortMetadata => default(PortMetadata);
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnBeforeSerialize()
-		{
-		}
-
-		private void UnityEngine_002EISerializationCallbackReceiver_002EOnAfterDeserialize()
-		{
 		}
 
 		private void Reset()
@@ -120,28 +78,74 @@ namespace SLZ.Marrow.Zones
 		{
 		}
 
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicSource_002ECalculate(ref NodeState nodeState)
+		void IVoidLogicNode.Initialize(NodeState nodeState)
 		{
 		}
 
-        public bool TryGetInputAtIndex(uint idx, out IVoidLogicSource input)
-        {
-            throw new NotImplementedException();
-        }
+		void IVoidLogicSource.Calculate(NodeState nodeState)
+		{
+		}
 
-        public void OnBeforeSerialize()
-        {
-            throw new NotImplementedException();
-        }
+		public int InputCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
-        public void OnAfterDeserialize()
-        {
-            throw new NotImplementedException();
-        }
+		public bool TryGetInputConnection(uint inputIndex, [Out] OutputPortReference connectedPort)
+		{
+			return default(bool);
+		}
 
-        public void Calculate(ref NodeState nodeState)
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public bool TryConnectPortToInput(OutputPortReference output, uint inputIndex)
+		{
+			return default(bool);
+		}
+
+		public PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public ZoneTriggerNode()
+		{
+		}
+
+		[SerializeField]
+		private Zone _zone;
+
+		[SerializeField]
+		[HideInInspector]
+		private bool _deprecated;
+
+		[SerializeField]
+		[NonReorderable]
+		[Tooltip("Dead Field: Please remove")]
+		[Obsolete("Dead Field: Please remove")]
+		protected internal MonoBehaviour[] _previous;
+
+		[NonReorderable]
+		[SerializeField]
+		[Tooltip("Previous node(s) in the chain")]
+		protected internal OutputPortReference[] _previousConnections;
+
+		public UltEvent<MarrowBody> OnBodyTriggerEnter;
+
+		public UltEvent<MarrowBody> OnBodyTriggerExit;
+
+		public UltEvent<MarrowEntity> OnEntityTriggerEnter;
+
+		public UltEvent<MarrowEntity> OnEntityTriggerExit;
+
+		[SerializeField]
+		[ReadOnly(false)]
+		private float logicMultiplier;
+
+		private static readonly PortMetadata _portMetadata;
+	}
 }

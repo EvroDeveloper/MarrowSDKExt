@@ -224,6 +224,15 @@ namespace SLZ.Marrow
             {
                 Application.OpenURL("https://slz.gg/levels");
             };
+            Image docsFixturesVideoImage = new Image();
+            docsFixturesVideoImage.image = videoIcon;
+            docsFixturesVideoImage.StretchToParentSize();
+            Button docsFixturesVideoButton = rootVisualElement.Q<Button>("docsFixturesVideoButton");
+            docsFixturesVideoButton.Add(docsFixturesVideoImage);
+            docsFixturesVideoButton.clickable.clicked += () =>
+            {
+                Application.OpenURL("https://slz.gg/fixtures");
+            };
             Image docsImpactPropertiesVideoImage = new Image();
             docsImpactPropertiesVideoImage.image = videoIcon;
             docsImpactPropertiesVideoImage.StretchToParentSize();
@@ -338,6 +347,11 @@ namespace SLZ.Marrow
             docsPalletPackButton.clickable.clicked += () =>
             {
                 Application.OpenURL("https://github.com/StressLevelZero/MarrowSDK/wiki/PalletsAndCrates");
+            };
+            Button docsFixturesButton = rootVisualElement.Q<Button>("docsFixturesButton");
+            docsFixturesButton.clickable.clicked += () =>
+            {
+                Application.OpenURL("https://github.com/StressLevelZero/MarrowSDK/wiki/Fixtures");
             };
             Button docsImpactPropertiesButton = rootVisualElement.Q<Button>("docsImpactPropertiesButton");
             docsImpactPropertiesButton.clickable.clicked += () =>
@@ -490,10 +504,12 @@ namespace SLZ.Marrow
             Button docsIPUtilsWindowButton = rootVisualElement.Q<Button>("docsIPUtilsWindowButton");
             docsIPUtilsWindowButton.clickable.clicked += () =>
             {
+                ImpactPropUtilsNewEditorWindow.ShowImpactPropUtilsWindow();
             };
-            Button docsChecklistLevelUtilButton = rootVisualElement.Q<Button>("docsChecklistLevelUtilButton");
-            docsChecklistLevelUtilButton.clickable.clicked += () =>
+            Button docsLevelUtilButton = rootVisualElement.Q<Button>("docsLevelUtilButton");
+            docsLevelUtilButton.clickable.clicked += () =>
             {
+                LevelUtilitiesEditorWin.ShowLevelUtilitiesEditorWindow();
             };
             Toggle docsChecklistAvatarHumanoid = rootVisualElement.Q<Toggle>("docsChecklistAvatarHumanoid");
             docsChecklistAvatarHumanoid.RegisterValueChangedCallback(evt =>
@@ -1453,7 +1469,7 @@ namespace SLZ.Marrow
                 {
                     foreach (var subChild in child.Children())
                     {
-                        if (subChild.name.Contains("docsUtilitiesLabel") || subChild.name.Contains("docsLightProbeButtonContainer"))
+                        if (subChild.name.Contains("docsUtilitiesLabel"))
                         {
                             subChild.style.display = DisplayStyle.None;
                         }

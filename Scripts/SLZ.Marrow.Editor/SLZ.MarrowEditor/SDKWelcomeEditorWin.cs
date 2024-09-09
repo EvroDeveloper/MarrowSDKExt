@@ -70,6 +70,9 @@ namespace SLZ.MarrowEditor
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(VISUALTREE_PATH);
             VisualElement tree = visualTree.Instantiate();
             tree.StretchToParentSize();
+            var headerLabel = tree.Q<Label>("headerLabel");
+            var sdkVersion = MarrowSDK.SDKVersion;
+            headerLabel.text = $"Marrow SDK {sdkVersion.Major}.{sdkVersion.Minor}";
             welcomeInstallPathLabel = tree.Q<Label>("welcomeInstallPathLabel");
             gameName = MarrowSDK.GAME_NAMES[0];
             string assetWarehouseIconPath = MarrowSDK.GetPackagePath("Editor/Assets/Icons/Warehouse");

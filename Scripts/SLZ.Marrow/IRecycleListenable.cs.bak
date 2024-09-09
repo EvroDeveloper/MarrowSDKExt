@@ -1,0 +1,13 @@
+﻿using System;
+using Cpp2IlInjected;
+using UnityEngine;
+
+// Token: 0x02000005 RID: 5
+[Token(Token = "0x2000005")]
+public interface IRecycleListenable
+{
+	// Token: 0x06000049 RID: 73
+	[Token(Token = "0x6000049")]
+	[Address(Slot = "0")]
+	void OnRecycle(GameObject go);
+}

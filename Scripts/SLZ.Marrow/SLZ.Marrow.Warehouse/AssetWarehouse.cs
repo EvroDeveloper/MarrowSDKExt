@@ -141,6 +141,7 @@ namespace SLZ.Marrow.Warehouse
                 LogVerbose($"Init {UnityEngine.Random.Range(1, 100)}");
                 Instance = this;
                 Initializing = true;
+                AssetWarehouseMetrics.Reset();
                 palletPackStopWatch.Restart();
                 palletManifestPackStopWatch.Restart();
                 var initStopWatch = new Stopwatch();
@@ -240,6 +241,7 @@ namespace SLZ.Marrow.Warehouse
             OnPalletAdded = null;
             OnCrateAdded = null;
             OnDataCardAdded = null;
+            AssetWarehouseMetrics.Reset();
 #if UNITY_EDITOR
             EditorObjectCrateLookup.Clear();
             EditorObjectGuidCrateLookup.Clear();
@@ -642,6 +644,8 @@ namespace SLZ.Marrow.Warehouse
             UnloadCrateAsset(crate, true);
             InventoryRegistry.Remove(crate.Barcode);
             _crateRegistry.Remove(crate.Barcode);
+            AssetWarehouseMetrics.LoadedScannableCount.Value--;
+            AssetWarehouseMetrics.LoadedCrateCount.Value--;
 #if UNITY_EDITOR
             Object removeItem = null;
             foreach (var objectCrateKVP in EditorObjectCrateLookup)
@@ -682,6 +686,8 @@ namespace SLZ.Marrow.Warehouse
             UnloadDataCardAsset(dataCard, true);
             InventoryRegistry.Remove(dataCard.Barcode);
             _dataCardRegistry.Remove(dataCard.Barcode);
+            AssetWarehouseMetrics.LoadedScannableCount.Value--;
+            AssetWarehouseMetrics.LoadedDataCardCount.Value--;
             DestroyRuntimeCreatedScannable(dataCard);
         }
 
@@ -813,6 +819,16 @@ namespace SLZ.Marrow.Warehouse
             {
                 Debug.LogError("AssetWarehouse: Cannot add item " + item.Title + ", invalid barcode");
             }
+            else
+            {
+                AssetWarehouseMetrics.LoadedScannableCount.Value++;
+                if (item is Pallet)
+                    AssetWarehouseMetrics.LoadedPalletCount.Value++;
+                if (item is Crate)
+                    AssetWarehouseMetrics.LoadedCrateCount.Value++;
+                if (item is DataCard)
+                    AssetWarehouseMetrics.LoadedDataCardCount.Value++;
+            }
 
             return added;
         }
@@ -850,6 +866,8 @@ namespace SLZ.Marrow.Warehouse
 
             InventoryRegistry.Remove(pallet.Barcode);
             _palletRegistry.Remove(pallet.Barcode);
+            AssetWarehouseMetrics.LoadedScannableCount.Value--;
+            AssetWarehouseMetrics.LoadedPalletCount.Value--;
             if (palletManifests.TryGetValue(pallet.Barcode, out var palletManifest))
             {
                 palletManifests.Remove(pallet.Barcode);
@@ -1121,7 +1139,7 @@ namespace SLZ.Marrow.Warehouse
                 {
                     if (loadedPallet != null)
                     {
-                        await LoadPalletDataCards(loadedPallet);
+                        await LoadPalletDataCards(loadedPallet, false);
                         AddPallet(loadedPallet);
                     }
                 }
@@ -1398,7 +1416,7 @@ namespace SLZ.Marrow.Warehouse
                     {
                         LoadAndUpdatePalletManifest(pallet, modListing, palletPath, catalogPath, catalogLocator);
                         if (loadDataCards)
-                            await LoadPalletDataCards(pallet);
+                            await LoadPalletDataCards(pallet, true);
                         AddPallet(pallet);
                         success = true;
                     }
@@ -1530,11 +1548,11 @@ namespace SLZ.Marrow.Warehouse
             return palletManifests.Values.ToList();
         }
 
-        public async UniTask LoadPalletDataCards(Pallet pallet)
+        public async UniTask LoadPalletDataCards(Pallet pallet, bool mutablePallet)
         {
             bool isPlaying = Application.isPlaying;
 #if UNITY_EDITOR
-            isPlaying = isPlaying || EditorApplication.isPlayingOrWillChangePlaymode;
+            isPlaying = isPlaying || EditorApplication.isPlayingOrWillChangePlaymode || mutablePallet;
             async UniTask<DataCard> BufferLoadDataCard(DataCard dataCard)
             {
                 DataCard loadedDataCard = dataCard;

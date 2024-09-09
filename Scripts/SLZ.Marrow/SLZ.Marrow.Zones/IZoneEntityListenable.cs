@@ -1,7 +1,5 @@
  
 
- 
-
 namespace SLZ.Marrow.Zones
 {
     public interface IZoneEntityListenable
@@ -9,6 +7,10 @@ namespace SLZ.Marrow.Zones
     }
 
     public interface IZoneBodyListenable
+    {
+    }
+
+    public interface IZoneTrackerListenable
     {
     }
 }

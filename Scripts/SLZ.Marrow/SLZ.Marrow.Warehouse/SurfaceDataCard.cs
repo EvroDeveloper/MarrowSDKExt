@@ -1,6 +1,6 @@
  
 using System.Collections.Generic;
- 
+using SLZ.Data;
  
  
 using UnityEngine;
@@ -21,6 +21,10 @@ namespace SLZ.Marrow.Warehouse
         private MarrowAssetT<PhysicMaterial> _physicsMaterialStatic;
         public MarrowAssetT<PhysicMaterial> PhysicsMaterialStatic { get => _physicsMaterialStatic; set => _physicsMaterialStatic = value; }
 
+        [SerializeField]
+        private MarrowAssetT<SurfaceData> _surfaceData;
+        public MarrowAssetT<SurfaceData> SurfaceData { get => _surfaceData; set => _surfaceData = value; }
+
         public override bool IsBundledDataCard()
         {
             return true;
@@ -33,6 +37,8 @@ namespace SLZ.Marrow.Warehouse
                 PhysicsMaterial = new MarrowAssetT<PhysicMaterial>(packedAsset.marrowAsset.AssetGUID);
             if (packedAssets.TryGetValue("PhysicsMaterialStatic", out packedAsset))
                 PhysicsMaterialStatic = new MarrowAssetT<PhysicMaterial>(packedAsset.marrowAsset.AssetGUID);
+            if (packedAssets.TryGetValue("SurfaceData", out packedAsset))
+                SurfaceData = new MarrowAssetT<SurfaceData>(packedAsset.marrowAsset.AssetGUID);
 #if false
 #endif
         }
@@ -42,6 +48,7 @@ namespace SLZ.Marrow.Warehouse
             base.ExportPackedAssets();
             PackedAssets.Add(new PackedAsset("PhysicsMaterial", PhysicsMaterial, PhysicsMaterial.AssetType, "_physicsMaterial"));
             PackedAssets.Add(new PackedAsset("PhysicsMaterialStatic", PhysicsMaterialStatic, PhysicsMaterialStatic.AssetType, "_physicsMaterialStatic"));
+            PackedAssets.Add(new PackedAsset("SurfaceData", SurfaceData, SurfaceData.AssetType, "_surfaceData"));
 #if false
 #endif
             return PackedAssets;

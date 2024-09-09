@@ -1,30 +1,21 @@
+﻿using System;
+using System.Runtime.InteropServices;
 using SLZ.Marrow.Pool;
 using SLZ.Marrow.Utilities;
+using SLZ.Marrow.VFX;
 using UnityEngine;
 
 namespace SLZ.Marrow
 {
 	public class ParticleTint : SpawnEvents
 	{
-		private static ComponentCache<ParticleTint> _cache;
-
-		[Header("This is used to tint particels when they are spawned in")]
-		[Space]
-		[SerializeField]
-		private ParticleSystem[] ParticleSystems;
-
-		[SerializeField]
-		private Renderer[] Renderers;
-
-		[SerializeField]
-		private AudioSource audioSource;
-
-		private int[] burstCount;
-
-		[SerializeField]
-		private Mesh quadRef;
-
-		public static ComponentCache<ParticleTint> Cache => null;
+		public static ComponentCache<ParticleTint> Cache
+		{
+			get
+			{
+				return null;
+			}
+		}
 
 		protected override void Reset()
 		{
@@ -78,11 +69,7 @@ namespace SLZ.Marrow
 		{
 		}
 
-		public void SetMeshAndPlay(Color TintColor, Mesh mesh, float volumeSize, Vector3 scale, Vector3? velocity = null)
-		{
-		}
-
-		public void SetMeshAndPlay(Color TintColor, SkinnedMeshRenderer mesh, float volumeSize, Vector3 scale, Vector3? velocity = null)
+		public void SetMeshAndPlay(Color TintColor, SkinnedMeshRenderer mesh, float volumeSize, Vector3 scale, [Optional] Vector3? velocity)
 		{
 		}
 
@@ -90,8 +77,56 @@ namespace SLZ.Marrow
 		{
 		}
 
-		public void SetQuadAsMeshEmitterAndStop()
+		private static Vector3 RandomPointInTriangle(Vector3 v1, Vector3 v2, Vector3 v3)
 		{
+			return default(Vector3);
+		}
+
+		public void SetMeshAndPlay(Color TintColor, Mesh mesh, float volumeSize, Vector3 scale, [Optional] Vector3? velocity, [Optional] Vector3? angularVelocity, [Optional] Vector3? centerOfMass)
+		{
+		}
+
+		public void SetParticlesFromBodiesAndPlay(Color tintColor, RBInfo[] bodies, Vector3 scale)
+		{
+		}
+
+		private void EmitParticleWithVelocity(ParticleSystem particleSystem, ParticleSystem.EmitParams emitParams, RBInfo rbInfo)
+		{
+		}
+
+		private Vector3 AngularVelocityFromRigidbodyInfo(Vector3 particlePosition, RBInfo rbInfo)
+		{
+			return default(Vector3);
+		}
+
+		private float GetVolumeSurface(Vector3 size)
+		{
+			return 0f;
+		}
+
+		private float CalculateEllipsoidSurfaceArea(Vector3 axes)
+		{
+			return 0f;
+		}
+
+		private Vector3 RandomPointInBounds(Bounds bounds)
+		{
+			return default(Vector3);
+		}
+
+		private Vector3 RandomPointInBox(Matrix4x4 boxMatrixTrans)
+		{
+			return default(Vector3);
+		}
+
+		private Vector3 RandomPointInSphere(SphereCollider sphereCollider)
+		{
+			return default(Vector3);
+		}
+
+		private Vector3 RandomPointInEllipsoid(Matrix4x4 capsMatrixTrans)
+		{
+			return default(Vector3);
 		}
 
 		private float GetVolume(Vector3 size)
@@ -110,5 +145,26 @@ namespace SLZ.Marrow
 		private void OnDestroy()
 		{
 		}
+
+		public ParticleTint()
+		{
+		}
+
+		private static ComponentCache<ParticleTint> _cache;
+
+		[Space]
+		[SerializeField]
+		[Header("This is used to tint particles when they are spawned in")]
+		private ParticleSystem[] ParticleSystems;
+
+		[SerializeField]
+		private Renderer[] Renderers;
+
+		[SerializeField]
+		private AudioSource audioSource;
+
+		private int[] burstCount;
+
+		private ParticleSystem.MinMaxCurve[] _startMinMaxCurves;
 	}
 }

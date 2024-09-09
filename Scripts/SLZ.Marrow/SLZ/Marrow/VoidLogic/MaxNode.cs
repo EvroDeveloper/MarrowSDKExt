@@ -1,18 +1,32 @@
+﻿using System;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
-	[HelpURL("https://github.com/StressLevelZero/MarrowSDK/wiki/VoidLogic/MaxNode")]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Max")]
+	[AddComponentMenu("VoidLogic/VoidLogic Max")]
 	[Support(SupportFlags.Supported, null)]
-	public class MaxNode : BaseNode
+	public sealed class MaxNode : BaseNode
 	{
-		private static readonly PortMetadata _portMetadata;
-
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		public override void Calculate(ref NodeState nodeState)
+		public override void Initialize(NodeState nodeState)
 		{
 		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public MaxNode()
+		{
+		}
+
+		private static readonly PortMetadata _portMetadata;
 	}
 }

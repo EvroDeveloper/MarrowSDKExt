@@ -1,11 +1,48 @@
+﻿using System;
 using UnityEngine;
 
 namespace SLZ.Marrow.VoidLogic
 {
+	[AddComponentMenu("VoidLogic/VoidLogic Button")]
 	[Support(SupportFlags.Supported, null)]
-	[AddComponentMenu("VoidLogic/Nodes/VoidLogic Button")]
 	public class ButtonNode : BaseNode, IVoidLogicSensor, IVoidLogicNode, IVoidLogicActuator
 	{
+		protected override void Awake()
+		{
+		}
+
+		protected override void OnEnable()
+		{
+		}
+
+		void IVoidLogicSensor.ReadSensors(NodeState nodeState)
+		{
+		}
+
+		public override void Initialize(NodeState nodeState)
+		{
+		}
+
+		public override void Calculate(NodeState nodeState)
+		{
+		}
+
+		void IVoidLogicActuator.Actuate(NodeState nodeState)
+		{
+		}
+
+		public override PortMetadata PortMetadata
+		{
+			get
+			{
+				return default(PortMetadata);
+			}
+		}
+
+		public ButtonNode()
+		{
+		}
+
 		[SerializeField]
 		protected float _lowThreshold;
 
@@ -43,37 +80,5 @@ namespace SLZ.Marrow.VoidLogic
 		private bool _performedInitialRead;
 
 		private static readonly PortMetadata _portMetadata;
-
-		public override PortMetadata PortMetadata => default(PortMetadata);
-
-		private new void Awake()
-		{
-		}
-
-		protected override void OnEnable()
-		{
-		}
-
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicSensor_002EReadSensors(ref NodeState nodeState)
-		{
-		}
-
-		public override void Calculate(ref NodeState nodeState)
-		{
-		}
-
-		private void SLZ_002EMarrow_002EVoidLogic_002EIVoidLogicActuator_002EActuate(ref NodeState nodeState)
-		{
-		}
-
-        public void ReadSensors(ref NodeState nodeState)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Actuate(ref NodeState nodeState)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+	}
 }
