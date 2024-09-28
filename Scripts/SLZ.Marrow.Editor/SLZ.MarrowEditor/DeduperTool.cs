@@ -132,6 +132,8 @@ namespace SLZ.MarrowEditor
                             address += "--" + entry.guid.Substring(0, 8);
                         }
 
+                        address += "-" + UnityEngine.Random.Range(0, 999999).ToString();
+
                         entry.SetAddress(address);
                         addedAddresses.Add(address);
                     }
