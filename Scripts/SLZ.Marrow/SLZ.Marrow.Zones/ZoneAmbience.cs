@@ -31,5 +31,10 @@ namespace SLZ.Marrow.Zones
         public AudioReverbData reverbSettings;
         [HideInInspector]
         public static bool zoneAmbiencePasted = false;
+
+        private void Play()
+	{
+		return;
+	}
     }
 }
