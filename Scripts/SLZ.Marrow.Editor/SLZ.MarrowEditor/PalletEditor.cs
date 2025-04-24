@@ -2,6 +2,8 @@ using System;
  
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.IO.Compression.FileSystem;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using SLZ.Marrow;
@@ -354,6 +356,18 @@ namespace SLZ.MarrowEditor
                                 if (GUILayout.Button(new GUIContent("Open Pallet", "Open Built Pallet Folder"), GUILayout.ExpandWidth(false)))
                                 {
                                     AddressablesManager.OpenBuiltModFolder(pallet);
+                                }
+
+                                if (GUILayout.Button(new GUIContent("Zip Pallet", "Zip the Built Pallet"), GUILayout.ExpandWidth(false)))
+                                {
+                                    string zipFilePath = palletFolder + ".zip";
+                                    ZipFile.CreateFromDirectory(palletFolder, palletFolder + ".zip", CompressionLevel.Optimal, includeBaseDirectory: true);
+                                }
+
+                                if(GUILayout.Button(new GUIContent("Upload to mod.io", "Automatically upload the Built Pallet to mod.io"), GUILayout.ExpandWidth(false)))
+                                {
+                                    string zipFilePath = palletFolder + ".zip";
+                                    ZipFile.CreateFromDirectory(palletFolder, zipFilePath, CompressionLevel.Optimal, includeBaseDirectory: true);
                                 }
 
                                 if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64)
