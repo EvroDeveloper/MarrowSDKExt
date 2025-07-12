@@ -23,6 +23,9 @@ namespace SLZ.Marrow.Warehouse
         [SerializeField]
         public SpawnableCrateReference spawnableCrateReference = new SpawnableCrateReference(Barcode.EmptyBarcode());
         [SerializeField]
+        [Tooltip("Policy Data is a ScriptableObject that is used to define whether policy rules should apply on a per-crate basis, the maximum spawn pool size, and how the pool of spawnables should handle reaching their maximum limit, i.e. Reuse the Oldest, Grow, Reuse the Newest, etc.")]
+        public SpawnPolicyData policyData;
+        [SerializeField]
         public CrateQuery crateQuery = new CrateQuery();
         [SerializeField]
         public bool useQuery = false;
