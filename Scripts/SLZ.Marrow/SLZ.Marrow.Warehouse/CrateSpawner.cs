@@ -8,6 +8,7 @@ using SLZ.Marrow.Utilities;
  
 using UltEvents;
 using UnityEngine;
+using SLZ.Marrow.Data;
 #if UNITY_EDITOR
 using UnityEditor;
 
