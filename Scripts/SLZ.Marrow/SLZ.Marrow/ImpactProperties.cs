@@ -7,6 +7,7 @@
  
 using UnityEngine;
 using SLZ.Marrow.Combat;
+using SLZ.Marrow.Data;
  
 using SLZ.Marrow.Interaction;
 using SLZ.Marrow.Warehouse;
@@ -22,7 +23,7 @@ namespace SLZ.Marrow
         [SerializeField]
         private DataCardReference<SurfaceDataCard> _surfaceDataCard;
         public DataCardReference<SurfaceDataCard> SurfaceDataCard { get => _surfaceDataCard; set => _surfaceDataCard = value; }
-
+        public SurfaceData surfaceData;
         public enum DecalType
         {
             None = -1,
