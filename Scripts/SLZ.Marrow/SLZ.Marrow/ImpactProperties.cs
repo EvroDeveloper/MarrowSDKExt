@@ -7,7 +7,7 @@
  
 using UnityEngine;
 using SLZ.Marrow.Combat;
-using SLZ.Marrow.Data;
+using SLZ.Data;
  
 using SLZ.Marrow.Interaction;
 using SLZ.Marrow.Warehouse;
