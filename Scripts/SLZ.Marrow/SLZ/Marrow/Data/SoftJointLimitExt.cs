@@ -15,7 +15,12 @@ namespace SLZ.Marrow.Data
 
 		public SoftJointLimit ToUnitySoftJointLimit()
 		{
-			return default(SoftJointLimit);
+			return new SoftJointLimit()
+			{
+				limit = limit,
+				bounciness = bounciness,
+				contactDistance = contactDistance
+			};
 		}
 	}
 }
