@@ -13,7 +13,11 @@ namespace SLZ.Marrow.Data
 
 		public SoftJointLimitSpring ToUnitySoftJointLimitSpring()
 		{
-			return default(SoftJointLimitSpring);
+			return new SoftJointLimitSpring()
+			{
+				spring = spring,
+				damper = damper
+			};
 		}
 	}
 }
