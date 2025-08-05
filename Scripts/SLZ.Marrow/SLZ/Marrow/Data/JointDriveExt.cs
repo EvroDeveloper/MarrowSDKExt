@@ -15,7 +15,12 @@ namespace SLZ.Marrow.Data
 
 		public JointDrive ToUnityJointDrive()
 		{
-			return default(JointDrive);
+			return new JointDrive()
+			{
+				positionSpring = positionSpring,
+				positionDamper = positionDamper,
+				maximumForce = maximumForce
+			};
 		}
 	}
 }
