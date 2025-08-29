@@ -835,34 +835,27 @@ namespace SLZ.MarrowEditor
         private Vector3[] BuildLightProbeGrid(LightProbeGroup lpGroup, Bounds selectedGOBounds, float gridSpacing, Vector3 gridBoundsShrink)
         {
             List<Vector3> lpgPositionsList = new List<Vector3>();
-            float xSize = (selectedGOBounds.size.x) / gridSpacing;
-            float ySize = (selectedGOBounds.size.y) / gridSpacing;
-            float zSize = (selectedGOBounds.size.z) / gridSpacing;
-            for (int x = 0; x <= xSize; x++)
+
+            Bounds shrunkBounds = selectedGOBounds;
+            shrunkBounds.size = shrunkBounds.size - gridBoundsShrink * 2;
+
+            int celProbesX = Mathf.CeilToInt((shrunkBounds.size.x) / gridSpacing);
+            int celProbesY = Mathf.CeilToInt((shrunkBounds.size.y) / gridSpacing);
+            int celProbesZ = Mathf.CeilToInt((shrunkBounds.size.z) / gridSpacing);
+
+            float xSize = (shrunkBounds.size.x) / celProbesX;
+            float ySize = (shrunkBounds.size.y) / celProbesY;
+            float zSize = (shrunkBounds.size.z) / celProbesZ;
+
+
+            for (float x = 0; x <= shrunkBounds.size.x + 0.01; x += xSize)
             {
-                for (int y = 0; y <= ySize; y++)
+                for (float y = 0; y <= shrunkBounds.size.y + 0.01; y += ySize)
                 {
-                    for (int z = 0; z <= zSize; z++)
+                    for (float z = 0; z <= shrunkBounds.size.z + 0.01; z += zSize)
                     {
-                        float xPosition = x * gridSpacing;
-                        float yPosition = y * gridSpacing;
-                        float zPosition = z * gridSpacing;
-                        if (ApproxWithinTolerance(xPosition, xSize, gridSpacing - gridBoundsShrink.x))
-                        {
-                            xPosition = xSize - 2 * gridBoundsShrink.x;
-                        }
 
-                        if (ApproxWithinTolerance(yPosition, ySize, gridSpacing - gridBoundsShrink.y))
-                        {
-                            yPosition = ySize - 2 * gridBoundsShrink.y;
-                        }
-
-                        if (ApproxWithinTolerance(zPosition, zSize, gridSpacing - gridBoundsShrink.z))
-                        {
-                            zPosition = zSize - 2 * gridBoundsShrink.z;
-                        }
-
-                        Vector3 lprobePoint = new Vector3(xPosition, yPosition, zPosition) - selectedGOBounds.extents + gridBoundsShrink;
+                        Vector3 lprobePoint = new Vector3(x, y, z) - shrunkBounds.extents;
                         if (selectedGOBounds.Contains(lpGroup.transform.TransformPoint(lprobePoint)))
                         {
                             lpgPositionsList.Add(lprobePoint);
