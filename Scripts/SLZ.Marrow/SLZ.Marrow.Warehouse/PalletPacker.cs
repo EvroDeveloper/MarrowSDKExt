@@ -142,7 +142,18 @@ namespace SLZ.Marrow.Warehouse
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                palletManifest = UnpackManifestJson(json);
+                try
+                {
+                    palletManifest = UnpackManifestJson(json);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"TESTWARNING: Unable to read pallet manifest at path {path}, skipping");
+                 
+                    palletManifest = null;
+                    palletManifestJson = null;
+                    return false;
+                }
                 palletManifestJson = json;
                 return true;
             }
