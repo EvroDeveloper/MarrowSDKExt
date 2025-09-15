@@ -146,7 +146,7 @@ namespace SLZ.Marrow.Warehouse
                 {
                     palletManifest = UnpackManifestJson(json);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Debug.LogWarning($"TESTWARNING: Unable to read pallet manifest at path {path}, skipping");
                  
