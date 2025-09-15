@@ -5,6 +5,7 @@ using SLZ.Marrow.Pool;
 using SLZ.Marrow.Zones;
 using UnityEngine;
 using System.Linq;
+using System.Reflection;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -727,7 +728,9 @@ namespace SLZ.Marrow.Interaction
 				go.AddComponent<MarrowEntity>();
 			}
 
-			Rigidbody[] rigidbodies = go.GetComponentsInChildren<Rigidbody>();
+            FieldInfo configJointFieldInfo = typeof(MarrowJoint).GetField("_configurableJoint", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            Rigidbody[] rigidbodies = go.GetComponentsInChildren<Rigidbody>();
 			foreach(Rigidbody rigidbody in rigidbodies)
 			{
 				MarrowBody body = rigidbody.GetComponent<MarrowBody>();
@@ -735,16 +738,44 @@ namespace SLZ.Marrow.Interaction
 				{
 					body = rigidbody.gameObject.AddComponent<MarrowBody>();
 				}
-			}
-			
-			ConfigurableJoint[] joints = go.GetComponentsInChildren<ConfigurableJoint>();
-			foreach(ConfigurableJoint joint in joints)
-			{
-				MarrowJoint marrowJoint = joint.GetComponent<MarrowJoint>();
-				if( marrowJoint == null )
-				{
-					marrowJoint = joint.gameObject.AddComponent<MarrowJoint>();
-				}
+
+				var configJoints = body.GetComponents<ConfigurableJoint>();
+
+				// There are config joints to marrow-ify
+				if (configJoints.Length > 0) {
+                    var marrowJoints = body.GetComponents<MarrowJoint>();
+
+					// There should be more config joints that marrowjoints during setup
+                    int difference = configJoints.Length - marrowJoints.Length;
+
+					// Mismatch, add some, if its less than zero then for some reason there are more marrowjoints than there are config joint components
+					if (difference > 0)
+					{
+						var newJointsAllocation = new MarrowJoint[marrowJoints.Length + difference];
+						for (int i = 0; i < marrowJoints.Length;)
+						{
+							newJointsAllocation[i] = marrowJoints[i];
+						}
+
+						for (int i = 0; i < difference; i++)
+						{
+							MarrowJoint newJoint = body.gameObject.AddComponent<MarrowJoint>();
+							newJointsAllocation[marrowJoints.Length + i] = newJoint;
+						}
+
+						marrowJoints = newJointsAllocation;
+					}
+
+                    
+                    // Set them all to their associated marrowjoint in the order they appear
+                    for (int i = 0; i < configJoints.Length; i++) {
+						ConfigurableJoint configurableJoint = configJoints[i];
+						MarrowJoint associatedJoint = marrowJoints[i];
+
+						configJointFieldInfo.SetValue(associatedJoint, configurableJoint);
+					}
+                }
+				
 			}
 
 			MarrowEntity[] marrowEntities = go.GetComponentsInChildren<MarrowEntity>();

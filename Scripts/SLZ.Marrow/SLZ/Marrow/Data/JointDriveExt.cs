@@ -12,8 +12,15 @@ namespace SLZ.Marrow.Data
 
 		public float maximumForce;
 
+        public JointDriveExt(JointDrive drive) : this()
+        {
+            positionSpring = drive.positionSpring;
+            positionDamper = drive.positionDamper;
+            maximumForce = drive.maximumForce;
+        }
 
-		public JointDrive ToUnityJointDrive()
+
+        public JointDrive ToUnityJointDrive()
 		{
 			return default(JointDrive);
 		}

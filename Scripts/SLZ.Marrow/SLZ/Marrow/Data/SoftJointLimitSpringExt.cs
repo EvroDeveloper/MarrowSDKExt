@@ -10,8 +10,14 @@ namespace SLZ.Marrow.Data
 
 		public float damper;
 
+        public SoftJointLimitSpringExt(SoftJointLimitSpring softJointLimitSpring) : this()
+        {
+            spring = softJointLimitSpring.spring;
+            damper = softJointLimitSpring.damper;
+        }
 
-		public SoftJointLimitSpring ToUnitySoftJointLimitSpring()
+
+        public SoftJointLimitSpring ToUnitySoftJointLimitSpring()
 		{
 			return default(SoftJointLimitSpring);
 		}

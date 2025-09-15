@@ -96,7 +96,56 @@ namespace SLZ.Marrow.Data
 
 		public void CopyFrom(ConfigurableJoint joint)
 		{
-		}
+            startRotation = joint.transform.localRotation;
+            axis = joint.axis;
+            secondaryAxis = joint.secondaryAxis;
+            anchor = joint.anchor;
+            connectedAnchor = joint.connectedAnchor;
+            autoConfigureConnectedAnchor = joint.autoConfigureConnectedAnchor;
+            breakForce = joint.breakForce;
+            breakTorque = joint.breakTorque;
+            enableCollision = joint.enableCollision;
+            enablePreprocessing = joint.enableCollision;
+            massScale = joint.massScale;
+            connectedMassScale = joint.connectedMassScale;
+            projectionAngle = joint.projectionAngle;
+            projectionDistance = joint.projectionDistance;
+            projectionModeExt = (JointProjectionModeExt) (int) joint.projectionMode;
+            slerpDriveExt = new JointDriveExt(joint.slerpDrive);
+            angularYZDriveExt = new JointDriveExt(joint.angularYZDrive);
+            angularXDriveExt = new JointDriveExt(joint.angularXDrive);
+            rotationDriveMode = (RotationDriveMode) (int) joint.projectionMode;
+            targetAngularVelocity = joint.targetAngularVelocity;
+            if (joint.connectedBody)
+            {
+                targetRotation = Quaternion.Inverse(joint.connectedBody.transform.rotation) * joint.transform.rotation;
+            }
+            else
+            {
+                targetRotation = Quaternion.identity;
+            }
+            zDriveExt = new JointDriveExt(joint.zDrive);
+            yDriveExt = new JointDriveExt(joint.yDrive);
+            xDriveExt = new JointDriveExt(joint.zDrive);
+            targetVelocity = joint.targetVelocity;
+            targetPosition = joint.targetPosition;
+            angularZLimitExt = new SoftJointLimitExt(joint.angularZLimit);
+            angularYLimitExt = new SoftJointLimitExt(joint.angularYLimit);
+            highAngularXLimitExt = new SoftJointLimitExt(joint.highAngularXLimit);
+            lowAngularXLimitExt = new SoftJointLimitExt(joint.lowAngularXLimit);
+            linearLimitExt = new SoftJointLimitExt(joint.linearLimit);
+            angularYZLimitSpringExt = new SoftJointLimitSpringExt(joint.angularYZLimitSpring);
+            angularXLimitSpringExt = new SoftJointLimitSpringExt(joint.angularXLimitSpring);
+            linearLimitSpringExt = new SoftJointLimitSpringExt(joint.linearLimitSpring);
+            angularZMotion = (ConfigurableJointMotion) (int) joint.angularZMotion;
+            angularYMotion = (ConfigurableJointMotion) (int) joint.angularYMotion;
+            angularXMotion = (ConfigurableJointMotion) (int) joint.angularXMotion;
+            zMotion = (ConfigurableJointMotion) (int) joint.zMotion;
+            yMotion = (ConfigurableJointMotion) (int) joint.yMotion;
+            xMotion = (ConfigurableJointMotion) (int) joint.xMotion;
+            configuredInWorldSpace = joint.configuredInWorldSpace;
+            swapBodies = joint.swapBodies;
+        }
 
 		public Quaternion GetJointSpace()
 		{

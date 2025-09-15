@@ -24,9 +24,21 @@ namespace SLZ.Marrow.Interaction
 		[SerializeField]
 		public float totalDistance;
 
-		public float SegmentDistance()
-		{
-			return 0f;
-		}
-	}
+        public float SegmentDistance()
+        {
+            switch (segmentResolution)
+            {
+                case SegmentResolution.Millimeter:
+                    return 0.001f;
+                case SegmentResolution.Centimeter:
+                    return 0.01f;
+                case SegmentResolution.Decimeter:
+                    return 0.1f;
+                case SegmentResolution.Meter:
+                    return 1f;
+                default:
+                    return 0.001f;
+            }
+        }
+    }
 }

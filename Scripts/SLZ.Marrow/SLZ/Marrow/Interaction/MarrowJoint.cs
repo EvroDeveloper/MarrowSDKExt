@@ -334,26 +334,24 @@ namespace SLZ.Marrow.Interaction
 
 		public void ValidateComponent()
 		{
-			ConfigurableJoint joint = GetComponent<ConfigurableJoint>();
-			if (joint != null)
+			if (_configurableJoint != null)
 			{
 				MarrowBody marrowBody = GetComponent<MarrowBody>();
 				if (marrowBody != null)
 				{
 					_bodyA = marrowBody;
 				}
-				if(joint.connectedBody != null)
+				if(_configurableJoint.connectedBody != null)
 				{
-					MarrowBody connectedMarrowBody = joint.connectedBody.GetComponent<MarrowBody>();
+					MarrowBody connectedMarrowBody = _configurableJoint.connectedBody.GetComponent<MarrowBody>();
 					if(connectedMarrowBody != null)
 					{
 						_bodyB = connectedMarrowBody;
 					}
 				}
-				_configurableJoint = joint; 
 
 				_defaultConfigJointInfo = new ConfigurableJointInfo();
-				_defaultConfigJointInfo.CopyFrom(joint);
+				_defaultConfigJointInfo.CopyFrom(_configurableJoint);
 			}
 			else
 			{
