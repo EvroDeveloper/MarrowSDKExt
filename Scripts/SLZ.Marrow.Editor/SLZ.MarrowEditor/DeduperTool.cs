@@ -140,7 +140,7 @@ namespace SLZ.MarrowEditor
                     else
                     {
                         Debug.LogError("Deduper: BAD entry in dedupe group! " + entry.address);
-                        entry.SetAddress("NULL/DELETEME");
+                        entry.SetAddress("NULL/DELETEME" + "-" + UnityEngine.Random.Range(0, 999999).ToString());
                     }
                 }
 
