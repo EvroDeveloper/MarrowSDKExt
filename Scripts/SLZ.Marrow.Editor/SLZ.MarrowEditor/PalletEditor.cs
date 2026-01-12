@@ -339,6 +339,11 @@ namespace SLZ.MarrowEditor
                                 PackPalletWithValidation(pallet, BuildTargetGroup.Android, BuildTarget.Android, EditorPrefs.GetBool("PackWithDedupe", false)).Forget();
                                 installSuccess = null;
                             }
+                            
+                            if (GUILayout.Button(new GUIContent("Prepare Pallet", "Prepare the Pallet in Addressables"), GUILayout.ExpandWidth(false)))
+                            {
+                                PalletPackerEditor.PreparePallet(pallet, true, EditorPrefs.GetBool("PackWithDedupe", false));
+                            }
 
                             GUILayout.FlexibleSpace();
                         }
