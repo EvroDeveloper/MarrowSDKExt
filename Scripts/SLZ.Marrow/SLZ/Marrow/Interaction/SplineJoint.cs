@@ -2,6 +2,11 @@ using System.Collections.Generic;
 using SLZ.Marrow.Utilities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Splines;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SLZ.Marrow.Interaction
 {
@@ -14,92 +19,73 @@ namespace SLZ.Marrow.Interaction
 
 		private static float3 _forward;
 
-		[SerializeField]
-		[Header("Configuration")]
-		private ContactCount _contactCount;
+        [Header("Configuration")]
+        [SerializeField]
+        private ContactCount _contactCount = ContactCount.One;
+        [SerializeField]
+        private Vector3 _axis = Vector3.forward;
+        [SerializeField]
+        private Vector3 _secondaryAxis = Vector3.up;
+        [SerializeField]
+        private Vector2 _size = Vector2.zero;
+        [SerializeField]
+        private Vector3 _anchor = Vector3.zero;
 
-		[SerializeField]
-		private Vector3 _axis;
+		[Space(15)]
+        [SerializeField]
+        private float _linearXDriveSpeed = 0;
+        [SerializeField]
+        private DampenContactDrive _linearXDrive;
 
-		[SerializeField]
-		private Vector3 _secondaryAxis;
+        [Space(15)]
+        [SerializeField, Tooltip("Sets rotational twist motion on the configured axis")]
+        private ConfigurableJointMotion _angularXMotion = ConfigurableJointMotion.Locked;
+        [SerializeField, Range(-177, 177)]
+        private float _angularXMinLimit = 0;
+        [SerializeField, Range(-177, 177)]
+        private float _angularXMaxLimit = 0;
+        [SerializeField]
+        private float _angularXDriveSpeed = 0;
+        [SerializeField]
+        private SpringContactDrive _angularXDrive;
 
-		[SerializeField]
-		private Vector2 _size;
+        [Space(15)]
+        [SerializeField]
+        private SplineJointMotion _linearYZMotion = SplineJointMotion.Locked;
+        [SerializeField]
+        private SoftSplineJointLimit _linearYZLimit;
+        [SerializeField]
+        private SpringContactDrive _linearYZDrive;
 
-		[SerializeField]
-		private Vector3 _anchor;
+        [Space(15)]
+        [SerializeField, Tooltip("Sets rotational swing motion on the configured axis")]
+        private ConfigurableJointMotion _angularYZMotion = ConfigurableJointMotion.Locked;
+        [SerializeField, Range(0, 177)]
+        private float _angularYZLimit = 0;
+        [SerializeField]
+        private SpringContactDrive _angularYZDrive;
 
-		[Space(15f)]
-		[SerializeField]
-		private float _linearXDriveSpeed;
-
-		[SerializeField]
-		private DampenContactDrive _linearXDrive;
-
-		[Space(15f)]
-		[SerializeField]
-		[Tooltip("Sets rotational twist motion on the configured axis")]
-		private ConfigurableJointMotion _angularXMotion;
-
-		[SerializeField]
-		[Range(-177f, 177f)]
-		private float _angularXMinLimit;
-
-		[Range(-177f, 177f)]
-		[SerializeField]
-		private float _angularXMaxLimit;
-
-		[SerializeField]
-		private float _angularXDriveSpeed;
-
-		[SerializeField]
-		private SpringContactDrive _angularXDrive;
-
-		[Space(15f)]
-		[SerializeField]
-		private SplineJointMotion _linearYZMotion;
-
-		[SerializeField]
-		private SoftSplineJointLimit _linearYZLimit;
-
-		[SerializeField]
-		private SpringContactDrive _linearYZDrive;
-
-		[Tooltip("Sets rotational swing motion on the configured axis")]
-		[Space(15f)]
-		[SerializeField]
-		private ConfigurableJointMotion _angularYZMotion;
-
-		[SerializeField]
-		[Range(0f, 177f)]
-		private float _angularYZLimit;
-
-		[SerializeField]
-		private SpringContactDrive _angularYZDrive;
-
-		[Header("References")]
-		[SerializeField]
-		private Rigidbody _rigidbody;
-
-		[SerializeField]
-		private PolyLine polyLine;
+        [Header("References")]
+        [SerializeField]
+        private Rigidbody _rigidbody;
+        [SerializeField]
+        private PolyLine polyLine;
 
 		private List<Contact> _contacts;
 
 		private int _curSplineIndex;
 
-		private Quaternion AnchorRotation => default(Quaternion);
+	    private Quaternion AnchorRotation =>
+            SynthesizeRotation(_axis.normalized, _secondaryAxis.normalized);
 
-		private Vector3 Size => default(Vector3);
-
-		private Vector3 FrontContact => default(Vector3);
-
-		private Vector3 RightContact => default(Vector3);
+        private Vector3 Size => new(_size.y, 0, _size.x);
+        private Vector3 FrontContact => new(0.5f * _size.y, 0, 0);
+        private Vector3 RightContact => new(0, 0, 0.5f * _size.x);
 
 		private void Reset()
-		{
-		}
+        {
+                _rigidbody = GetComponent<Rigidbody>();
+        }
 
 		private void Awake()
 		{
@@ -117,50 +103,84 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
-		public void SetAngularXDriveSpeed(float speed)
-		{
-		}
+        public void SetAngularXDriveSpeed(float speed)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetAngularXDriveSpeed(float)");
 
-		public void SetAngularXDrivePositionSpring(float springForce)
-		{
-		}
+            throw new System.NotImplementedException();
+        }
 
-		public void SetAngularXDrivePositionDamper(float damperForce)
-		{
-		}
+        public void SetAngularXDrivePositionSpring(float springForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetAngularXDrivePositionSpring(float)");
 
-		public void SetAngularXDriveMaxForce(float maxForce)
-		{
-		}
+            throw new System.NotImplementedException();
+        }
 
-		public void SetYZDrivePositionSpring(float springForce)
-		{
-		}
+        public void SetAngularXDrivePositionDamper(float damperForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetAngularXDrivePositionDamper(float)");
 
-		public void SetYZDrivePositionDamper(float damperForce)
-		{
-		}
+            throw new System.NotImplementedException();
+        }
 
-		public void SetYZDriveMaxForce(float maxForce)
-		{
-		}
+        public void SetAngularXDriveMaxForce(float maxForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetAngularXDriveMaxForce(float)");
 
-		public void SetLinearXDriveSpeed(float speed)
-		{
-		}
+            throw new System.NotImplementedException();
+        }
 
-		public void SetLinearXDrivePositionDamper(float damperForce)
-		{
-		}
+        public void SetYZDrivePositionSpring(float springForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetYZDrivePositionSpring(float)");
 
-		public void SetLinearXDriveMaxForce(float maxForce)
-		{
-		}
+            throw new System.NotImplementedException();
+        }
 
-		private static quaternion SynthesizeRotation(float3 right, float3 up)
-		{
-			return default(quaternion);
-		}
+        public void SetYZDrivePositionDamper(float damperForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetYZDrivePositionDamper(float)");
+
+            throw new System.NotImplementedException();
+        }
+
+        public void SetYZDriveMaxForce(float maxForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetYZDriveMaxForce(float)");
+
+            throw new System.NotImplementedException();
+        }
+
+        public void SetLinearXDriveSpeed(float speed)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetLinearXDriveSpeed(float)");
+
+            throw new System.NotImplementedException();
+        }
+
+        public void SetLinearXDrivePositionDamper(float damperForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetLinearXDrivePositionDamper(float)");
+
+            throw new System.NotImplementedException();
+        }
+
+        public void SetLinearXDriveMaxForce(float maxForce)
+        {
+            UnityEngine.Debug.Log("Hollowed Method: SLZ.Marrow.Interaction.SplineJoint.SetLinearXDriveMaxForce(float)");
+
+            throw new System.NotImplementedException();
+        }
+
+        private static quaternion SynthesizeRotation(float3 right, float3 up)
+        {
+
+            var z = math.cross(right, up);
+            var y = math.cross(z, right);
+
+            return quaternion.LookRotationSafe(z, y);
+        }
 
 		private void Update()
 		{
@@ -199,17 +219,134 @@ namespace SLZ.Marrow.Interaction
 		{
 		}
 
-		public SimpleTransform GetContactOriginInWorld()
-		{
-			return default(SimpleTransform);
-		}
+        public SimpleTransform GetContactOriginInWorld()
+        {
+            return new SimpleTransform(
+                transform.position + transform.rotation * _anchor,
+                transform.rotation * AnchorRotation);
+        }
 
-		public void PlaceOnSpline()
-		{
-		}
+        //SLZ method for placing the object on the spline. Not sure why #2 doesn't have any special case for it.
+        public void PlaceOnSpline()
+        {
+            switch (_contactCount)
+            {
+                case ContactCount.One:
+                    {
+                        var targetPos = _rigidbody.transform.TransformPoint(_anchor);
+                        targetPos = polyLine.transform.InverseTransformPoint(targetPos);
 
+                        SplineUtility.GetNearestPoint(polyLine.SplineContainer.Spline, targetPos, out var _, out var splineTime);
+                        polyLine.SplineContainer.Evaluate(splineTime, out var pos, out var tan, out var up);
+
+                        var direction = math.normalize(tan);
+                        var rot = SynthesizeRotation(direction, up);
+                        var orientation = SynthesizeRotation(_axis, _secondaryAxis);
+
+                        pos += math.rotate(rot, math.rotate(math.inverse(orientation), -_anchor));
+                        rot = math.mul(rot, math.inverse(orientation));
+
+                        _rigidbody.transform.SetPositionAndRotation(pos, rot);
+
+                        break;
+                    }
+                case ContactCount.Two:
+                case ContactCount.Four:
+                    {
+                        var orientation = SynthesizeRotation(_axis, _secondaryAxis);
+
+                        var backAnchor = _anchor + (Vector3)math.rotate(orientation, -FrontContact);
+                        var backPoint = _rigidbody.transform.TransformPoint(backAnchor);
+                        backPoint = polyLine.transform.InverseTransformPoint(backPoint);
+
+                        SplineUtility.GetNearestPoint(polyLine.SplineContainer.Spline, backPoint, out var _, out var splineTime);
+                        polyLine.SplineContainer.Evaluate(splineTime, out var bkPos, out _, out var bkUp);
+
+                        SplineUtility.GetPointAtLinearDistance(polyLine.SplineContainer.Spline, splineTime, _size.y, out var frSplineTime);
+
+                        polyLine.SplineContainer.Evaluate(frSplineTime, out var frPos, out _, out _);
+
+                        var direction = math.normalize(frPos - bkPos);
+                        var rot = SynthesizeRotation(direction, bkUp);
+
+                        var pos = bkPos + math.rotate(rot, math.rotate(math.inverse(orientation), -backAnchor));
+                        rot = math.mul(rot, math.inverse(orientation));
+
+                        _rigidbody.transform.SetPositionAndRotation(pos, rot);
+
+                        break;
+                    }
+            }
+        }
+
+        //Couldn't find this method in the original editor script, it might be new.
 		public void SetPolyLine(PolyLine polyline)
 		{
 		}
+
+        //I changed it from OnDrawGizmosSelected() to OnDrawGizmos() because I thought it looked cooler when the gizmo is always visible. I still think this.
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+
+            SimpleTransform origin = GetContactOriginInWorld();
+
+            Gizmos.color = Color.red;
+
+
+            Vector3 forward = FrontContact;
+            Vector3 right = RightContact;
+
+            Gizmos.matrix = Matrix4x4.TRS(origin.position, origin.rotation, Vector3.one);
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(Vector3.zero, Vector3.right * 0.15f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(Vector3.zero, Vector3.up * 0.15f);
+
+            switch (_contactCount)
+            {
+                case ContactCount.One:
+                    Gizmos.color = Color.white;
+
+                    Gizmos.DrawWireCube(Vector3.zero, new Vector3(0.05f, 0, 0.05f));
+                    Gizmos.DrawWireSphere(Vector3.zero, 0.01f);
+                    break;
+                case ContactCount.Two:
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawWireCube(Vector3.zero, new Vector3(_size.y, 0, 0) + Vector3.forward * 0.05f);
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawWireSphere(Vector3.zero + forward, 0.01f);
+                    Gizmos.DrawWireSphere(Vector3.zero - forward, 0.01f);
+                    break;
+                case ContactCount.Four:
+                    Gizmos.DrawWireCube(Vector3.zero, Size);
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawWireSphere(Vector3.zero + right + forward, 0.01f);
+                    Gizmos.DrawWireSphere(Vector3.zero + right - forward, 0.01f);
+                    Gizmos.DrawWireSphere(Vector3.zero - right + forward, 0.01f);
+                    Gizmos.DrawWireSphere(Vector3.zero - right - forward, 0.01f);
+                    break;
+            }
+        }
+#endif
+
+//Editor button for placing the Spline Joint gameobject on the Spline.
+#if UNITY_EDITOR
+    [CustomEditor(typeof(SplineJoint))]
+    public class SplineJointEditor : Editor
+    {
+		public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+			SplineJoint behaviour = (SplineJoint)target;
+
+			if(GUILayout.Button("Place On Spline"))
+			{
+				behaviour.PlaceOnSpline();
+			}
+        }
+	}
+#endif
 	}
 }
